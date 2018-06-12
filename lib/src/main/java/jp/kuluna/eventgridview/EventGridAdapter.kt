@@ -20,7 +20,24 @@ open class EventGridAdapter(val context: Context, private val draggable: Boolean
     private var events = emptyList<Event>()
     private var group = emptyList<Pair<Int, List<Event>>>()
     private var day = Date()
+    /** 最後の終了時刻 */
+    private val lastEnd
+        get() = events.maxBy { it.end }?.end
+    /** 24時間を超えた時間 */
+    val overTime: Int
+        get() {
+            val selectCal = Calendar.getInstance()
+            selectCal.time = day
+            val lastEndCal = Calendar.getInstance()
+            lastEndCal.time = lastEnd ?: day
 
+            return if (selectCal.get(Calendar.DATE) != lastEndCal.get(Calendar.DATE)) {//日跨ぎ有り
+                lastEndCal.get(Calendar.HOUR_OF_DAY)
+            } else {//日跨ぎ無し
+                -1
+            }
+        }
+    var onRplaceListener :((Int) -> Unit)? = null
     /** EventViewColumnで生成されたのEventView格納用 */
     private var eventViews = mutableListOf<View>()
     /** ViewHolder全体のEventViewの配列の格納用 */
@@ -36,11 +53,11 @@ open class EventGridAdapter(val context: Context, private val draggable: Boolean
         holder.view.onEventClickListener = {
             onEventClickListener?.onEventClick(it)
         }
-        holder.view.onEventChangedListener = { old, new , hideAll ->
+        holder.view.onEventChangedListener = { old, new, hideAll ->
             onEventChangedListener?.onChange(old, new)
 
             // イベント長さ調整ボタンを全て非表示
-            if(hideAll) {
+            if (hideAll) {
                 hideAllAdjustButton()
             }
         }
@@ -57,6 +74,9 @@ open class EventGridAdapter(val context: Context, private val draggable: Boolean
         this.group = this.events.groupBy { it.groupId }.toList()
         this.day = day
 
+        onRplaceListener?.let{
+            it(overTime)
+        }
         notifyDataSetChanged()
     }
 
@@ -65,7 +85,7 @@ open class EventGridAdapter(val context: Context, private val draggable: Boolean
      */
     fun hideAllAdjustButton() {
         eventViewGroup.forEach { views ->
-            views.forEach {  view ->
+            views.forEach { view ->
                 view.topAdjust.visibility = View.INVISIBLE
                 view.bottomAdjust.visibility = View.INVISIBLE
             }

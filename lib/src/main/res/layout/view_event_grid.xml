@@ -2,6 +2,15 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="overTime"
+            type="int" />
+    </data>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="960dp">
