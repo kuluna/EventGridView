@@ -7,9 +7,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.widget.FrameLayout
-import jp.kuluna.eventgridview.EventGridAdapter
 import jp.kuluna.eventgridview.databinding.ViewEventGridBinding
-import jp.kuluna.eventgridview.R
 
 class EventGridView : FrameLayout {
     private val binding: ViewEventGridBinding
@@ -18,6 +16,9 @@ class EventGridView : FrameLayout {
         get() = binding.eventGridRecyclerView.adapter as EventGridAdapter
         set(value) {
             binding.eventGridRecyclerView.adapter = value
+            value.onRplaceListener = {
+                binding.overTime = it
+            }
         }
 
     constructor(context: Context) : this(context, null)

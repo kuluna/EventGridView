@@ -42,6 +42,5 @@ class MainActivity : AppCompatActivity() {
         }
 
         adapter.replace(events, Date())
-        //eventGridView.setOverTime()
     }
 }
