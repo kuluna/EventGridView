@@ -7,15 +7,13 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.widget.FrameLayout
-import jp.kuluna.eventgridview.EventGridAdapter
 import jp.kuluna.eventgridview.databinding.ViewEventGridBinding
-import jp.kuluna.eventgridview.R
 
 class EventGridView : FrameLayout {
     private val binding: ViewEventGridBinding
 
-    var adapter: EventGridAdapter
-        get() = binding.eventGridRecyclerView.adapter as EventGridAdapter
+    var adapter: EventGridAdapter?
+        get() = binding.eventGridRecyclerView.adapter as? EventGridAdapter
         set(value) {
             binding.eventGridRecyclerView.adapter = value
         }
@@ -29,7 +27,7 @@ class EventGridView : FrameLayout {
         binding.eventGridRecyclerView.setOnTouchListener { _, event ->
             return@setOnTouchListener when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
-                    adapter.hideAllAdjustButton()
+                    adapter?.hideAllAdjustButton()
                     false
                 }
                 else -> false
