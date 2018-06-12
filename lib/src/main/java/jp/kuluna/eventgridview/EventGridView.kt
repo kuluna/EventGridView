@@ -18,6 +18,7 @@ class EventGridView : FrameLayout {
             binding.eventGridRecyclerView.adapter = value
             value.onRplaceListener = {
                 binding.overTime = it
+                // TODO 過ぎた分だけ表示・非表示を切り替える
             }
         }
 
