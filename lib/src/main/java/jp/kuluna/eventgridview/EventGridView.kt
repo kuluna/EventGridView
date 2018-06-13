@@ -16,7 +16,7 @@ class EventGridView : FrameLayout {
         get() = binding.eventGridRecyclerView.adapter as? EventGridAdapter
         set(value) {
             binding.eventGridRecyclerView.adapter = value
-            value?.onRplaceListener = {
+            value?.onScaleRefreshListener = {
                 binding.overTime = it
             }
         }

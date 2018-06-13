@@ -47,7 +47,6 @@ open class EventColumnView(context: Context, private val draggable: Boolean) : F
     private var oldEvent: Event? = null
     /** Eventの時間 */
     private var elapsedTime: TimeParams? = null
-
     init {
         layoutParams = FrameLayout.LayoutParams((widthDp * density).toInt(), FrameLayout.LayoutParams.MATCH_PARENT).apply {
             this.setMargins(density.toInt(), 0, density.toInt(), 0)
@@ -104,7 +103,6 @@ open class EventColumnView(context: Context, private val draggable: Boolean) : F
                     // Eventの長さを調節するボタンを表示する
                     draggedView.topAdjust.visibility = View.VISIBLE
                     draggedView.bottomAdjust.visibility = View.VISIBLE
-
                     true
                 }
 

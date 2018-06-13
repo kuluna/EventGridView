@@ -37,7 +37,7 @@ open class EventGridAdapter(val context: Context, private val draggable: Boolean
                 -1
             }
         }
-    var onRplaceListener :((Int) -> Unit)? = null
+    var onScaleRefreshListener: ((Int) -> Unit)? = null
     /** EventViewColumnで生成されたのEventView格納用 */
     private var eventViews = mutableListOf<View>()
     /** ViewHolder全体のEventViewの配列の格納用 */
@@ -60,6 +60,11 @@ open class EventGridAdapter(val context: Context, private val draggable: Boolean
             if (hideAll) {
                 hideAllAdjustButton()
             }
+            // TODO この辺り処理をちゃんとする
+            val index = events.indexOf(old)
+            events[index].start = new.start
+            events[index].end = new.end
+            scaleRefresh()
         }
         eventViews = holder.view.eventViews
         eventViewGroup.add(eventViews)
@@ -74,9 +79,7 @@ open class EventGridAdapter(val context: Context, private val draggable: Boolean
         this.group = this.events.groupBy { it.groupId }.toList()
         this.day = day
 
-        onRplaceListener?.let{
-            it(overTime)
-        }
+        scaleRefresh()
         notifyDataSetChanged()
     }
 
@@ -89,6 +92,12 @@ open class EventGridAdapter(val context: Context, private val draggable: Boolean
                 view.topAdjust.visibility = View.INVISIBLE
                 view.bottomAdjust.visibility = View.INVISIBLE
             }
+        }
+    }
+
+    private fun scaleRefresh() {
+        onScaleRefreshListener?.let {
+            it(overTime)
         }
     }
 }
