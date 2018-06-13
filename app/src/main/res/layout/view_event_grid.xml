@@ -4,22 +4,21 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="960dp">
+        android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/scale_linear_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.5" />
+                android:layout_height="20dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="40dp"
                 android:gravity="center_vertical">
 
                 <TextView
@@ -38,8 +37,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="40dp"
                 android:gravity="center_vertical">
 
                 <TextView
@@ -58,8 +56,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="40dp"
                 android:gravity="center_vertical">
 
                 <TextView
@@ -78,8 +75,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="40dp"
                 android:gravity="center_vertical">
 
                 <TextView
@@ -98,8 +94,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="40dp"
                 android:gravity="center_vertical">
 
                 <TextView
@@ -118,8 +113,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="40dp"
                 android:gravity="center_vertical">
 
                 <TextView
@@ -138,8 +132,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="40dp"
                 android:gravity="center_vertical">
 
                 <TextView
@@ -158,8 +151,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="40dp"
                 android:gravity="center_vertical">
 
                 <TextView
@@ -178,8 +170,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="40dp"
                 android:gravity="center_vertical">
 
                 <TextView
@@ -198,8 +189,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="40dp"
                 android:gravity="center_vertical">
 
                 <TextView
@@ -218,8 +208,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="40dp"
                 android:gravity="center_vertical">
 
                 <TextView
@@ -238,8 +227,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="40dp"
                 android:gravity="center_vertical">
 
                 <TextView
@@ -258,8 +246,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="40dp"
                 android:gravity="center_vertical">
 
                 <TextView
@@ -278,8 +265,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="40dp"
                 android:gravity="center_vertical">
 
                 <TextView
@@ -298,8 +284,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="40dp"
                 android:gravity="center_vertical">
 
                 <TextView
@@ -318,8 +303,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="40dp"
                 android:gravity="center_vertical">
 
                 <TextView
@@ -338,8 +322,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="40dp"
                 android:gravity="center_vertical">
 
                 <TextView
@@ -358,8 +341,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="40dp"
                 android:gravity="center_vertical">
 
                 <TextView
@@ -378,8 +360,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="40dp"
                 android:gravity="center_vertical">
 
                 <TextView
@@ -398,8 +379,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="40dp"
                 android:gravity="center_vertical">
 
                 <TextView
@@ -418,8 +398,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="40dp"
                 android:gravity="center_vertical">
 
                 <TextView
@@ -438,8 +417,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="40dp"
                 android:gravity="center_vertical">
 
                 <TextView
@@ -457,9 +435,9 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/bottom_scale_view"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="40dp"
                 android:gravity="center_vertical">
 
                 <TextView
@@ -477,9 +455,9 @@
             </LinearLayout>
 
             <Space
+                android:id="@+id/bottom_space_view"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.5" />
+                android:layout_height="20dp"/>
 
         </LinearLayout>
 
