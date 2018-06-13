@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        adapter = EventGridAdapter(this)
+        adapter = EventGridAdapter(this, true)
         findViewById<DragableEventGridListView>(R.id.event_grid_view).eventGridView.adapter = adapter
         showEvents()
     }
