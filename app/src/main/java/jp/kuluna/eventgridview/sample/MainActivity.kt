@@ -1,22 +1,24 @@
 package jp.kuluna.eventgridview.sample
 
-import android.support.v7.app.AppCompatActivity
+import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import jp.kuluna.eventgridview.DragableEventGridListView
 import jp.kuluna.eventgridview.Event
 import jp.kuluna.eventgridview.EventGridAdapter
+import jp.kuluna.eventgridview.sample.databinding.ActivityMainBinding
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var adapter: EventGridAdapter
+    private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         adapter = EventGridAdapter(this, true)
-        findViewById<DragableEventGridListView>(R.id.event_grid_view).eventGridView.adapter = adapter
+        binding.eventGridView.adapter = adapter
         showEvents()
     }
 
