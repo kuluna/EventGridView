@@ -8,7 +8,6 @@ import android.view.MenuItem
 import jp.kuluna.eventgridview.DragableEventGridListView
 import jp.kuluna.eventgridview.Event
 import jp.kuluna.eventgridview.EventGridAdapter
-import jp.kuluna.eventgridview.EventGridView
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -36,10 +35,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showEvents() {
+        val period = Random().nextInt(24)
         val startedAt = Date()
         val endedAt = Calendar.getInstance().apply {
             time = startedAt
-            add(Calendar.HOUR_OF_DAY, Random().nextInt(24))
+            add(Calendar.HOUR_OF_DAY, period)
         }.time
         val gridColor = ContextCompat.getColor(this, android.R.color.holo_blue_light)
         val blackColor = ContextCompat.getColor(this, android.R.color.black)

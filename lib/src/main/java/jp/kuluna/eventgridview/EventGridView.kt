@@ -21,7 +21,7 @@ class EventGridView : FrameLayout {
         get() = binding.eventGridRecyclerView.adapter as? EventGridAdapter
         set(value) {
             binding.eventGridRecyclerView.adapter = value
-            value.onRplaceListener = {
+            value?.onRplaceListener = {
                 binding.scaleLinearLayout.run {
                     // 一番下の目盛り(これの下のビューを追加)
                     val indexScale = indexOfChild(binding.bottomScaleView)
