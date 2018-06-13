@@ -3,9 +3,12 @@ package jp.kuluna.eventgridview.sample
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
+import android.view.Menu
+import android.view.MenuItem
 import jp.kuluna.eventgridview.DragableEventGridListView
 import jp.kuluna.eventgridview.Event
 import jp.kuluna.eventgridview.EventGridAdapter
+import jp.kuluna.eventgridview.EventGridView
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -18,11 +21,25 @@ class MainActivity : AppCompatActivity() {
         showEvents()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.activity_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.reloadButton -> {
+                showEvents()
+            }
+        }
+        return true
+    }
+
     private fun showEvents() {
         val startedAt = Date()
         val endedAt = Calendar.getInstance().apply {
             time = startedAt
-            add(Calendar.HOUR_OF_DAY, 12)
+            add(Calendar.HOUR_OF_DAY, Random().nextInt(24))
         }.time
         val gridColor = ContextCompat.getColor(this, android.R.color.holo_blue_light)
         val blackColor = ContextCompat.getColor(this, android.R.color.black)
