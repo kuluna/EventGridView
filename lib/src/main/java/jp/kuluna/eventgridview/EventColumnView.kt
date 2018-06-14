@@ -181,7 +181,7 @@ open class EventColumnView(context: Context, private val draggable: Boolean) : F
                         putExtra("itemPosition", index)
                         putExtra("event", event.toBundle())
                     }
-                    ViewCompat.startDragAndDrop(view, ClipData.newIntent("event", intent), DragItemShadow(view, adjustStartTapY), view, 0)
+                    ViewCompat.startDragAndDrop(view, ClipData.newIntent("event", intent), EventDragShadowBuilder(view, adjustStartTapY), view, 0)
                     true
                 }
                 // ドラッグ用のイベント追加します
@@ -299,7 +299,10 @@ open class EventColumnView(context: Context, private val draggable: Boolean) : F
     }
 }
 
-class DragItemShadow(view: View, private val adjustStartTapY: Float) : DragShadowBuilder(view) {
+/**
+ * イベント用のDragShadowBuilder
+ */
+class EventDragShadowBuilder(view: View, private val adjustStartTapY: Float) : DragShadowBuilder(view) {
 
     override fun onProvideShadowMetrics(shadowSize: Point, shadowTouchPoint: Point) {
         val margin = 20

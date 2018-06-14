@@ -16,6 +16,8 @@ open class EventGridAdapter(val context: Context, private val draggable: Boolean
     var onEventClickListener: OnEventClickListener? = null
     /** Eventをドラッグしたことによる変更イベント */
     var onEventChangedListener: OnEventChangedListener? = null
+    /** 目盛が変わったことによる変更イベント */
+    var onScaleRefreshListener: ((Int) -> Unit)? = null
 
     private var events = emptyList<Event>()
     private var group = emptyList<Pair<Int, List<Event>>>()
@@ -37,7 +39,6 @@ open class EventGridAdapter(val context: Context, private val draggable: Boolean
                 -1
             }
         }
-    var onScaleRefreshListener: ((Int) -> Unit)? = null
     /** EventViewColumnで生成されたのEventView格納用 */
     private var eventViews = mutableListOf<View>()
     /** ViewHolder全体のEventViewの配列の格納用 */
@@ -95,6 +96,9 @@ open class EventGridAdapter(val context: Context, private val draggable: Boolean
         }
     }
 
+    /**
+     * 目盛を終了が最も遅いイベントに合わせて更新します
+     */
     private fun scaleRefresh() {
         onScaleRefreshListener?.let {
             it(overTime)
