@@ -5,11 +5,13 @@ import android.content.ClipData
 import android.content.Context
 import android.content.Intent
 import android.databinding.DataBindingUtil
+import android.graphics.Point
 import android.support.v4.view.ViewCompat
 import android.view.DragEvent
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import android.view.View.DragShadowBuilder
 import android.widget.FrameLayout
 import jp.kuluna.eventgridview.databinding.ViewEventBinding
 import kotlinx.android.synthetic.main.view_event.view.*
@@ -32,15 +34,18 @@ open class EventColumnView(context: Context, private val draggable: Boolean) : F
     /** RecyclerViewにおけるこのViewの現在のPosition */
     private var layoutPosition = 0
     private var events: MutableList<Event> = mutableListOf()
-
     /** Event調整ボタンドラッグ開始Y座標(px) */
     private var adjustStartY = 0f
+    /** EventをタップしたときのY座標(px) */
+    private var adjustStartTapY = 0f
     /** Eventの横幅(dp) */
     private val widthDp = 48
     /** Eventの最低の高さ */
     private var minEventHeight = convertPxToRoundedDp(90.0F) // 固定値にしてあります
     /** Eventの高さ最大値 */
     private var maxEventHeight = 0
+    /** Eventのトップの最大値 */
+    private var maxEventTop = (TimeParams(24, 0).fromY - 10) * density// 10dp単位なので-10
     /** EventViewの格納用 */
     var eventViews = mutableListOf<View>()
     /** 調整前のEvent */
@@ -63,9 +68,11 @@ open class EventColumnView(context: Context, private val draggable: Boolean) : F
                     oldEvent = event
                     val draggedView = (dragEvent.localState as View)
                     // 開始地点がマイナスになった時は0時0分開始にする
-                    var dropStartY = dragEvent.y - (draggedView.height / 2)
+                    var dropStartY = dragEvent.y - adjustStartTapY
                     if (dropStartY < 0) {
                         dropStartY = 0f
+                    } else if (dropStartY >= maxEventTop) {
+                        dropStartY = maxEventTop
                     }
 
                     // ドロップ位置のマージンで再設定
@@ -104,7 +111,6 @@ open class EventColumnView(context: Context, private val draggable: Boolean) : F
                     // Eventの長さを調節するボタンを表示する
                     draggedView.topAdjust.visibility = View.VISIBLE
                     draggedView.bottomAdjust.visibility = View.VISIBLE
-
                     true
                 }
 
@@ -162,6 +168,12 @@ open class EventColumnView(context: Context, private val draggable: Boolean) : F
             }
 
             if (draggable) {
+                binding.root.setOnTouchListener { _, touchEvent ->
+                    if (touchEvent.action == MotionEvent.ACTION_DOWN) {
+                        adjustStartTapY = touchEvent.y
+                    }
+                    false
+                }
                 // ロングクリック用のイベント追加します
                 binding.root.setOnLongClickListener { view ->
                     val intent = Intent().apply {
@@ -169,7 +181,7 @@ open class EventColumnView(context: Context, private val draggable: Boolean) : F
                         putExtra("itemPosition", index)
                         putExtra("event", event.toBundle())
                     }
-                    ViewCompat.startDragAndDrop(view, ClipData.newIntent("event", intent), View.DragShadowBuilder(view), view, 0)
+                    ViewCompat.startDragAndDrop(view, ClipData.newIntent("event", intent), EventDragShadowBuilder(view, adjustStartTapY), view, 0)
                     true
                 }
                 // ドラッグ用のイベント追加します
@@ -192,7 +204,7 @@ open class EventColumnView(context: Context, private val draggable: Boolean) : F
                             val distance = convertPxToRoundedDp((touchEvent.y - adjustStartY))
                             binding.cardView.layoutParams = (binding.cardView.layoutParams as FrameLayout.LayoutParams).apply {
                                 // Eventの長さはminEventHeightより小さくならず、drop直後のHeightより小さい
-                                if ((height - distance) in minEventHeight..maxEventHeight) {
+                                if ((height - distance) in minEventHeight..maxEventHeight && topMargin + distance < maxEventTop) {
                                     topMargin += distance
                                     height -= distance
                                     elapsedTime = TimeParams.from(height.toFloat(), density)
@@ -284,5 +296,19 @@ open class EventColumnView(context: Context, private val draggable: Boolean) : F
         // 10: 最小のドラッグ単位を10dpにする
         val unit = (density * 10).toInt()
         return (px / unit).roundToInt() * unit
+    }
+}
+
+/**
+ * イベント用のDragShadowBuilder
+ */
+class EventDragShadowBuilder(view: View, private val adjustStartTapY: Float) : DragShadowBuilder(view) {
+
+    override fun onProvideShadowMetrics(shadowSize: Point, shadowTouchPoint: Point) {
+        val margin = 20
+        //影の分の領域を含めたサイズを設定
+        shadowSize.set(view.width + margin, view.height + margin)
+        //viewの中央に設定
+        shadowTouchPoint.set(view.width / 2, adjustStartTapY.toInt())
     }
 }
