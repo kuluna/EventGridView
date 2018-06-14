@@ -18,6 +18,8 @@ open class EventGridAdapter(val context: Context, private val draggable: Boolean
     var onEventChangedListener: OnEventChangedListener? = null
     /** 目盛が変わったことによる変更イベント */
     var onScaleRefreshListener: ((Int) -> Unit)? = null
+    /** ドラッグのイベント */
+    var onDragListener: View.OnDragListener? = null
 
     private var events = emptyList<Event>()
     private var group = emptyList<Pair<Int, List<Event>>>()
@@ -61,12 +63,16 @@ open class EventGridAdapter(val context: Context, private val draggable: Boolean
             if (hideAll) {
                 hideAllAdjustButton()
             }
-            // TODO この辺り処理をちゃんとする
             val index = events.indexOf(old)
             events[index].start = new.start
             events[index].end = new.end
             scaleRefresh()
         }
+        holder.view.setOnDragListener { v, event ->
+                onDragListener?.onDrag(v, event)
+            false
+        }
+
         eventViews = holder.view.eventViews
         eventViewGroup.add(eventViews)
     }
