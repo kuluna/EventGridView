@@ -36,7 +36,7 @@ open class EventColumnView(context: Context, private val draggable: Boolean) : F
     private var events: MutableList<Event> = mutableListOf()
     /** Event調整ボタンドラッグ開始Y座標(px) */
     private var adjustStartY = 0f
-    /** Event調整ボタンドラッグ開始タップY座標(px) */
+    /** EventをタップしたときのY座標(px) */
     private var adjustStartTapY = 0f
     /** Eventの横幅(dp) */
     private val widthDp = 48
