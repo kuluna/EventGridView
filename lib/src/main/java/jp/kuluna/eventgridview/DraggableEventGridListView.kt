@@ -15,8 +15,10 @@ import jp.kuluna.eventgridview.databinding.ViewEventListBinding
 
 class DraggableEventGridListView : FrameLayout {
     private lateinit var binding: ViewEventListBinding
-    /** 現在タッチしているy座標 */
+    /** 現在タッチしているy座標 イベント伸縮時の自動スクロールに使用 */
     private var touchingAbsoluteY: Int = 0
+    /** イベントドラッグ時の自動スクロール用Handler */
+    private lateinit var handler: ScrollHandler
 
     constructor(context: Context) : super(context) {
         load()
@@ -64,7 +66,6 @@ class DraggableEventGridListView : FrameLayout {
                 }
             }
         }
-    private lateinit var handler: ScrollHandler
 
     private fun load() {
         binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.view_event_list, this, true)
@@ -81,6 +82,9 @@ class DraggableEventGridListView : FrameLayout {
     }
 }
 
+/**
+ * イベントドラッグ時の自動スクロール用Handler
+ */
 class ScrollHandler(val scrollView: ScrollView) : Handler() {
     override fun handleMessage(msg: Message?) {
         super.handleMessage(msg)
@@ -89,16 +93,25 @@ class ScrollHandler(val scrollView: ScrollView) : Handler() {
         sendMessageDelayed(Message.obtain(this, msg.what, msg.arg1, msg.arg2), 15)
     }
 
+    /**
+     * すべてのメッセージを削除
+     */
     fun removeMessageAll() {
         removeMessages(1)
         removeMessages(2)
     }
 
+    /**
+     * 上にスクロール
+     */
     fun moveToTop() {
         removeMessages(2)
         if (!hasMessages(1)) sendMessage(Message.obtain(this, 1, -20, 0))
     }
 
+    /**
+     * 下にスクロール
+     */
     fun moveToBottom() {
         removeMessages(1)
         if (!hasMessages(2)) sendMessage(Message.obtain(this, 2, 20, 0))
