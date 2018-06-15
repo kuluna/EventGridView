@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         adapter = EventGridAdapter(this, true)
-        binding.eventGridView.eventGridView.adapter = adapter
+        binding.eventGridView.adapter = adapter
         showEvents()
     }
 

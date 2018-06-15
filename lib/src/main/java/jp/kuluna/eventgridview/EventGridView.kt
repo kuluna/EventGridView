@@ -19,7 +19,6 @@ class EventGridView : FrameLayout {
             value?.onScaleRefreshListener = {
                 binding.overTime = it
             }
-            // TODO ここでonDragListenerの設定
         }
 
     constructor(context: Context) : this(context, null)
