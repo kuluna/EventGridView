@@ -2,6 +2,8 @@ package jp.kuluna.eventgridview
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
+import android.view.DragEvent
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.view_event.view.*
@@ -18,6 +20,10 @@ open class EventGridAdapter(val context: Context, private val draggable: Boolean
     var onEventChangedListener: OnEventChangedListener? = null
     /** 目盛が変わったことによる変更イベント */
     var onScaleRefreshListener: ((Int) -> Unit)? = null
+    /** ドラッグのイベント */
+    var onEventDragListener: ((DragEvent) -> Unit)? = null
+    /** Event伸縮のイベント */
+    var onEventStretchListener: ((MotionEvent) -> Unit)? = null
 
     private var events = emptyList<Event>()
     private var group = emptyList<Pair<Int, List<Event>>>()
@@ -54,6 +60,12 @@ open class EventGridAdapter(val context: Context, private val draggable: Boolean
         holder.view.onEventClickListener = {
             onEventClickListener?.onEventClick(it)
         }
+        holder.view.onEventDragListener = {
+            onEventDragListener?.let { onDrag -> onDrag(it) }
+        }
+        holder.view.onEventStretchListener = {
+            onEventStretchListener?.let { onStretch -> onStretch(it) }
+        }
         holder.view.onEventChangedListener = { old, new, hideAll ->
             onEventChangedListener?.onChange(old, new)
 
@@ -61,12 +73,12 @@ open class EventGridAdapter(val context: Context, private val draggable: Boolean
             if (hideAll) {
                 hideAllAdjustButton()
             }
-            // TODO この辺り処理をちゃんとする
             val index = events.indexOf(old)
             events[index].start = new.start
             events[index].end = new.end
             scaleRefresh()
         }
+
         eventViews = holder.view.eventViews
         eventViewGroup.add(eventViews)
     }

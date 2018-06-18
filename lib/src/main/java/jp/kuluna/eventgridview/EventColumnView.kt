@@ -26,6 +26,10 @@ import kotlin.math.roundToInt
 open class EventColumnView(context: Context, private val draggable: Boolean) : FrameLayout(context) {
     /** Eventのクリックイベント */
     var onEventClickListener: ((Event) -> Unit)? = null
+    /** Eventのドラッグイベント */
+    var onEventDragListener: ((DragEvent) -> Unit)? = null
+    /** Eventの伸縮イベント */
+    var onEventStretchListener: ((MotionEvent) -> Unit)? = null
     /** Eventをドラッグしたことによる変更イベント */
     var onEventChangedListener: ((Event, Event, hideAll: Boolean) -> Unit)? = null
 
@@ -60,6 +64,7 @@ open class EventColumnView(context: Context, private val draggable: Boolean) : F
 
         // 自身がドロップを受け入れられるようにする
         setOnDragListener { _, dragEvent ->
+            onEventDragListener?.let { it(dragEvent) }
             return@setOnDragListener when (dragEvent.action) {
                 DragEvent.ACTION_DROP -> {
                     val intent = dragEvent.clipData.getItemAt(0).intent
@@ -186,6 +191,7 @@ open class EventColumnView(context: Context, private val draggable: Boolean) : F
                 }
                 // ドラッグ用のイベント追加します
                 binding.root.setOnDragListener { _, dragEvent ->
+                    onEventDragListener?.let { it(dragEvent) }
                     return@setOnDragListener when (dragEvent.action) {
                         DragEvent.ACTION_DRAG_STARTED -> false // 自身がドロップに反応させないようにする
                         else -> true
@@ -194,6 +200,7 @@ open class EventColumnView(context: Context, private val draggable: Boolean) : F
 
                 // イベント上のボタンでイベントの長さ調整をします
                 binding.root.topAdjust.setOnTouchListener { _, touchEvent ->
+                    onEventStretchListener?.let { it(touchEvent) }
                     return@setOnTouchListener when (touchEvent.action) {
                         MotionEvent.ACTION_DOWN -> {
                             parent.requestDisallowInterceptTouchEvent(true)
@@ -238,6 +245,7 @@ open class EventColumnView(context: Context, private val draggable: Boolean) : F
 
                 // イベント下のボタンでイベントの長さ調整をします
                 binding.root.bottomAdjust.setOnTouchListener { _, touchEvent ->
+                    onEventStretchListener?.let { it(touchEvent) }
                     return@setOnTouchListener when (touchEvent.action) {
                         MotionEvent.ACTION_DOWN -> {
                             parent.requestDisallowInterceptTouchEvent(true)

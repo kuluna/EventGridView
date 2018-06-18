@@ -1,7 +1,5 @@
 package jp.kuluna.eventgridview
 
-import jp.kuluna.eventgridview.Event
-
 interface OnEventClickListener {
     fun onEventClick(event: Event)
 }
