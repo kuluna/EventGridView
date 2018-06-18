@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion 27
@@ -10,13 +10,22 @@ android {
         minSdkVersion 21
         targetSdkVersion 27
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
 
         consumerProguardFiles 'proguard-rules.pro'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     dataBinding {
         enabled = true
+    }
+}
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.novoda:bintray-release:0.8.1'
     }
 }
 
@@ -30,4 +39,17 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+}
+
+publish {
+    userOrg = 'kuluna'
+    groupId = 'jp.kuluna'
+    artifactId = 'eventgridview'
+    publishVersion = '1.0.0'
+    desc = 'A day events view. Draggable.'
+    website = 'https://github.com/kuluna/EventGridView'
+}
+
+tasks.withType(Javadoc).all {
+    enabled = false
 }

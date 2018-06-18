@@ -1,9 +1,9 @@
 package jp.kuluna.eventgridview
 
 import android.content.Context
+import android.support.v7.widget.AppCompatImageView
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
-import android.widget.ImageView
 
 class TouchableRecyclerView : RecyclerView {
     constructor(context: Context) : super(context)
@@ -20,7 +20,7 @@ class TouchableRecyclerView : RecyclerView {
     }
 }
 
-class TouchableImageView : ImageView {
+class TouchableImageView : AppCompatImageView {
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle)
