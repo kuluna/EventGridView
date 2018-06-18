@@ -1,12 +1,13 @@
 package jp.kuluna.eventgridview
 
 import android.content.Context
+import android.databinding.DataBindingUtil
 import android.support.v7.widget.RecyclerView
 import android.view.DragEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.view_event.view.*
+import jp.kuluna.eventgridview.databinding.ViewEventBinding
 import java.util.*
 
 /**
@@ -102,8 +103,10 @@ open class EventGridAdapter(val context: Context, private val draggable: Boolean
     fun hideAllAdjustButton() {
         eventViewGroup.forEach { views ->
             views.forEach { view ->
-                view.topAdjust.visibility = View.INVISIBLE
-                view.bottomAdjust.visibility = View.INVISIBLE
+                DataBindingUtil.bind<ViewEventBinding>(view)?.run {
+                    topAdjust.visibility = View.INVISIBLE
+                    bottomAdjust.visibility = View.INVISIBLE
+                }
             }
         }
     }

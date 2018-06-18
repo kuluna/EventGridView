@@ -15,9 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:foreground="?android:attr/selectableItemBackground"
-        android:paddingTop="0dp"
         app:cardBackgroundColor="@{event.backgroundColor}"
-        app:contentPadding="0dp"
         tools:cardBackgroundColor="@android:color/white">
 
         <LinearLayout
@@ -25,14 +23,14 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <Button
-                android:id="@+id/topAdjust"
+            <jp.kuluna.eventgridview.TouchableImageView
+                android:id="@+id/top_adjust"
                 android:layout_width="match_parent"
-                android:layout_height="4dp"
-                android:layout_marginEnd="2dp"
-                android:layout_marginStart="2dp"
-                android:background="@drawable/event_adjust"
+                android:layout_height="16dp"
+                android:scaleType="fitStart"
+                android:src="@drawable/event_adjust"
                 android:visibility="invisible"
+                tools:ignore="ContentDescription"
                 tools:visibility="visible" />
 
             <TextView
@@ -45,14 +43,14 @@
                 android:textSize="12sp"
                 tools:text="Event name" />
 
-            <Button
-                android:id="@+id/bottomAdjust"
+            <jp.kuluna.eventgridview.TouchableImageView
+                android:id="@+id/bottom_adjust"
                 android:layout_width="match_parent"
-                android:layout_height="4dp"
-                android:layout_marginEnd="2dp"
-                android:layout_marginStart="2dp"
-                android:background="@drawable/event_adjust"
+                android:layout_height="16dp"
+                android:scaleType="fitEnd"
+                android:src="@drawable/event_adjust"
                 android:visibility="invisible"
+                tools:ignore="ContentDescription"
                 tools:visibility="visible" />
         </LinearLayout>
 

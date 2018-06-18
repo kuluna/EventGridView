@@ -14,7 +14,6 @@ import android.view.View
 import android.view.View.DragShadowBuilder
 import android.widget.FrameLayout
 import jp.kuluna.eventgridview.databinding.ViewEventBinding
-import kotlinx.android.synthetic.main.view_event.view.*
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -70,8 +69,9 @@ open class EventColumnView(context: Context, private val draggable: Boolean) : F
                     val intent = dragEvent.clipData.getItemAt(0).intent
                     val position = intent.getIntExtra("itemPosition", -1)
                     val event = Event.from(intent.getBundleExtra("event"))
+                    val eventBinding = DataBindingUtil.bind<ViewEventBinding>(dragEvent.localState as View)!!
+
                     oldEvent = event
-                    val draggedView = (dragEvent.localState as View)
                     // 開始地点がマイナスになった時は0時0分開始にする
                     var dropStartY = dragEvent.y - adjustStartTapY
                     if (dropStartY < 0) {
@@ -82,7 +82,7 @@ open class EventColumnView(context: Context, private val draggable: Boolean) : F
 
                     // ドロップ位置のマージンで再設定
                     val newStart = TimeParams.from(dropStartY, density)
-                    draggedView.layoutParams = (draggedView.layoutParams as FrameLayout.LayoutParams).apply {
+                    eventBinding.root.layoutParams = (eventBinding.root.layoutParams as FrameLayout.LayoutParams).apply {
                         val newMargin = (newStart.fromY * density).toInt()
                         topMargin = newMargin
                     }
@@ -102,20 +102,19 @@ open class EventColumnView(context: Context, private val draggable: Boolean) : F
                     events[position] = event
 
                     // Eventの長さ最大値設定
-                    maxEventHeight = draggedView.layoutParams.height
+                    maxEventHeight = eventBinding.root.layoutParams.height
 
                     // 変更を通知
                     onEventChangedListener?.invoke(Event.from(intent.getBundleExtra("event")), event, true)
 
                     // 編集表示用のEventを書き換えます
-                    draggedView.setOnClickListener(null)
-                    draggedView.setOnClickListener {
+                    eventBinding.root.setOnClickListener {
                         onEventClickListener?.invoke(event)
                     }
 
                     // Eventの長さを調節するボタンを表示する
-                    draggedView.topAdjust.visibility = View.VISIBLE
-                    draggedView.bottomAdjust.visibility = View.VISIBLE
+                    eventBinding.topAdjust.visibility = View.VISIBLE
+                    eventBinding.bottomAdjust.visibility = View.VISIBLE
                     true
                 }
 
@@ -199,7 +198,7 @@ open class EventColumnView(context: Context, private val draggable: Boolean) : F
                 }
 
                 // イベント上のボタンでイベントの長さ調整をします
-                binding.root.topAdjust.setOnTouchListener { _, touchEvent ->
+                binding.topAdjust.setOnTouchListener { view, touchEvent ->
                     onEventStretchListener?.let { it(touchEvent) }
                     return@setOnTouchListener when (touchEvent.action) {
                         MotionEvent.ACTION_DOWN -> {
@@ -244,7 +243,7 @@ open class EventColumnView(context: Context, private val draggable: Boolean) : F
                 }
 
                 // イベント下のボタンでイベントの長さ調整をします
-                binding.root.bottomAdjust.setOnTouchListener { _, touchEvent ->
+                binding.bottomAdjust.setOnTouchListener { _, touchEvent ->
                     onEventStretchListener?.let { it(touchEvent) }
                     return@setOnTouchListener when (touchEvent.action) {
                         MotionEvent.ACTION_DOWN -> {
