@@ -23,7 +23,9 @@ data class Event(
         /** イベント内に表示するアイコン */
         var icon: Bitmap? = null,
         /** 追加で保持したい値がある場合はここに代入 */
-        var extra: String? = null
+        var extra: String? = null,
+        /** イベントのドラッグが可能かどうかのフラグ */
+        var draggable:Boolean? = null
 ) {
     companion object {
         fun from(bundle: Bundle) = Event(
@@ -34,7 +36,8 @@ data class Event(
                 bundle.getInt("backgroundColor"),
                 bundle.getInt("textColor"),
                 bundle.getParcelable("icon"),
-                bundle.getString("extra")
+                bundle.getString("extra"),
+                bundle.getBoolean("draggable")
         )
     }
 
@@ -47,6 +50,7 @@ data class Event(
         putInt("textColor", textColor)
         putParcelable("icon", icon)
         putString("extra", extra)
+        draggable?.let{putBoolean("draggable", it)}
     }
 
     fun getCrossOverType(base: Date): CrossOver {

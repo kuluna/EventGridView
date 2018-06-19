@@ -171,7 +171,7 @@ open class EventColumnView(context: Context, private val draggable: Boolean) : F
                 topMargin = (fromY * density).toInt()
             }
 
-            if (draggable) {
+            if (event.draggable ?: draggable) {
                 binding.root.setOnTouchListener { _, touchEvent ->
                     if (touchEvent.action == MotionEvent.ACTION_DOWN) {
                         adjustStartTapY = touchEvent.y

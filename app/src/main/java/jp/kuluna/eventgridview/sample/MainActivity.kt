@@ -51,11 +51,23 @@ class MainActivity : AppCompatActivity() {
                     0,
                     startedAt,
                     endedAt,
-                    "名前",
+                    "ドラッグ不可",
                     gridColor,
                     blackColor,
                     null,
-                    null))
+                    null,
+                    false))
+
+            add(Event(
+                    1,
+                    startedAt,
+                    endedAt,
+                    "ドラッグ可",
+                    gridColor,
+                    blackColor,
+                    null,
+                    null,
+                    true))
         }
 
         adapter.replace(events, Date())
