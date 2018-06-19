@@ -14,7 +14,7 @@ import java.util.*
  * EventGridView用Adapter
  * @param context [Context]
  */
-open class EventGridAdapter(val context: Context, private val draggable: Boolean = false) : RecyclerView.Adapter<EventGridViewHolder>() {
+open class EventGridAdapter(val context: Context) : RecyclerView.Adapter<EventGridViewHolder>() {
     /** Eventのクリックイベント */
     var onEventClickListener: OnEventClickListener? = null
     /** Eventをドラッグしたことによる変更イベント */
@@ -51,7 +51,7 @@ open class EventGridAdapter(val context: Context, private val draggable: Boolean
     /** ViewHolder全体のEventViewの配列の格納用 */
     private var eventViewGroup = mutableListOf<List<View>>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventGridViewHolder = EventGridViewHolder(EventColumnView(context, draggable))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventGridViewHolder = EventGridViewHolder(EventColumnView(context))
 
     override fun getItemCount(): Int = group.size
 
