@@ -22,7 +22,7 @@ import kotlin.math.roundToInt
  * @param context Android Context
  */
 @SuppressLint("ViewConstructor")
-open class EventColumnView(context: Context, private val draggable: Boolean) : FrameLayout(context) {
+open class EventColumnView(context: Context) : FrameLayout(context) {
     /** Eventのクリックイベント */
     var onEventClickListener: ((Event) -> Unit)? = null
     /** Eventのドラッグイベント */
@@ -171,7 +171,7 @@ open class EventColumnView(context: Context, private val draggable: Boolean) : F
                 topMargin = (fromY * density).toInt()
             }
 
-            if (draggable) {
+            if (event.draggable) {
                 binding.root.setOnTouchListener { _, touchEvent ->
                     if (touchEvent.action == MotionEvent.ACTION_DOWN) {
                         adjustStartTapY = touchEvent.y
