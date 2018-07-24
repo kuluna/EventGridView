@@ -104,8 +104,8 @@ open class EventGridAdapter(val context: Context) : RecyclerView.Adapter<EventGr
         eventViewGroup.forEach { views ->
             views.forEach { view ->
                 DataBindingUtil.bind<ViewEventBinding>(view)?.run {
-                    topAdjust.visibility = View.INVISIBLE
-                    bottomAdjust.visibility = View.INVISIBLE
+                    topAdjust.visibility = View.GONE
+                    bottomAdjust.visibility = View.GONE
                 }
             }
         }

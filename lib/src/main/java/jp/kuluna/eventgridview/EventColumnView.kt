@@ -198,7 +198,7 @@ open class EventColumnView(context: Context) : FrameLayout(context) {
                 }
 
                 // イベント上のボタンでイベントの長さ調整をします
-                binding.topAdjust.setOnTouchListener { view, touchEvent ->
+                binding.topAdjust.setOnTouchListener { _, touchEvent ->
                     onEventStretchListener?.let { it(touchEvent) }
                     return@setOnTouchListener when (touchEvent.action) {
                         MotionEvent.ACTION_DOWN -> {
