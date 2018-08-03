@@ -23,7 +23,7 @@ import kotlin.math.roundToInt
  * @param context Android Context
  */
 @SuppressLint("ViewConstructor")
-open class EventColumnView(context: Context, private val draggable: Boolean) : FrameLayout(context) {
+open class EventColumnView(context: Context, private val draggable: Boolean, private val widthIsMatchParent: Boolean) : FrameLayout(context) {
     /** Eventのクリックイベント */
     var onEventClickListener: ((Event) -> Unit)? = null
     /** Eventをドラッグしたことによる変更イベント */
@@ -54,7 +54,11 @@ open class EventColumnView(context: Context, private val draggable: Boolean) : F
     private var elapsedTime: TimeParams? = null
 
     init {
-        layoutParams = FrameLayout.LayoutParams((widthDp * density).toInt(), FrameLayout.LayoutParams.MATCH_PARENT).apply {
+        layoutParams = if (!widthIsMatchParent) {
+            FrameLayout.LayoutParams((widthDp * density).toInt(), FrameLayout.LayoutParams.MATCH_PARENT)
+        } else {
+            FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
+        }.apply {
             this.setMargins(density.toInt(), 0, density.toInt(), 0)
         }
 
@@ -113,7 +117,6 @@ open class EventColumnView(context: Context, private val draggable: Boolean) : F
                     draggedView.bottomAdjust.visibility = View.VISIBLE
                     true
                 }
-
                 else -> true
             }
         }
