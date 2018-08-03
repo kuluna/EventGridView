@@ -23,7 +23,7 @@ import kotlin.math.roundToInt
  * @param context Android Context
  */
 @SuppressLint("ViewConstructor")
-open class EventColumnView(context: Context, private val draggable: Boolean, private val widthIsMatchParent: Boolean) : FrameLayout(context) {
+open class EventColumnView(context: Context, private val draggable: Boolean, widthIsMatchParent: Boolean) : FrameLayout(context) {
     /** Eventのクリックイベント */
     var onEventClickListener: ((Event) -> Unit)? = null
     /** Eventをドラッグしたことによる変更イベント */
