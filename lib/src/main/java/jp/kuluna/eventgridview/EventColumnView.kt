@@ -20,6 +20,7 @@ import kotlin.math.roundToInt
 /**
  * イベントを1列内に表示するためのView
  * @param context Android Context
+ * @param widthIsMatchParent true に設定すると width が match_parent に
  */
 @SuppressLint("ViewConstructor")
 open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : FrameLayout(context) {
@@ -57,10 +58,12 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
     private var elapsedTime: TimeParams? = null
 
     init {
-        layoutParams = if (!widthIsMatchParent) {
-            FrameLayout.LayoutParams((widthDp * density).toInt(), FrameLayout.LayoutParams.MATCH_PARENT)
-        } else {
+        layoutParams = if (widthIsMatchParent) {
+            // widthIsMatchParent == true ならEventColumnViewのwidthをmatch_parentに
             FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
+        } else {
+            // そうでなければ既定の値に設定
+            FrameLayout.LayoutParams((widthDp * density).toInt(), FrameLayout.LayoutParams.MATCH_PARENT)
         }.apply {
             this.setMargins(density.toInt(), 0, density.toInt(), 0)
         }

@@ -13,6 +13,7 @@ import java.util.*
 /**
  * EventGridView用Adapter
  * @param context [Context]
+ * @param widthIsMatchParent true に設定すると EventGridColumnView の width が match_parent に
  */
 open class EventGridAdapter(private val context: Context, private val widthIsMatchParent: Boolean = false) : RecyclerView.Adapter<EventGridViewHolder>() {
     /** Eventのクリックイベント */
