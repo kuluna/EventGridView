@@ -59,15 +59,17 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
 
     init {
         layoutParams = if (widthIsMatchParent) {
-            // widthIsMatchParent == true ならEventColumnViewのwidthをmatch_parentに
-            FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
+            // widthIsMatchParent == true ならイベントの横幅が最大に
+            FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT).apply {
+                setMargins(density.toInt(), 0, density.toInt(), 0)
+            }
         } else {
-            // そうでなければ既定の値に設定
-            FrameLayout.LayoutParams((widthDp * density).toInt(), FrameLayout.LayoutParams.MATCH_PARENT)
-        }.apply {
-            this.setMargins(density.toInt(), 0, density.toInt(), 0)
+            // そうでなければ横幅を既定の値で固定
+            FrameLayout.LayoutParams((widthDp * density).toInt(), FrameLayout.LayoutParams.MATCH_PARENT).apply {
+                setMargins(density.toInt(), 0, density.toInt(), 0)
+            }
         }
-
+        
         // 自身がドロップを受け入れられるようにする
         setOnDragListener { _, dragEvent ->
             onEventDragListener?.let { it(dragEvent) }
