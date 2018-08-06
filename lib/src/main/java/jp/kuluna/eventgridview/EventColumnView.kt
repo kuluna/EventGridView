@@ -66,7 +66,7 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
             (widthDp * density).toInt()
         }
 
-        FrameLayout.LayoutParams(width, FrameLayout.LayoutParams.MATCH_PARENT).apply {
+        layoutParams = FrameLayout.LayoutParams(width, FrameLayout.LayoutParams.MATCH_PARENT).apply {
             setMargins(density.toInt(), 0, density.toInt(), 0)
         }
 
