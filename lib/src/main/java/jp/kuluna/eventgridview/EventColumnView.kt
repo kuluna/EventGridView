@@ -20,9 +20,10 @@ import kotlin.math.roundToInt
 /**
  * イベントを1列内に表示するためのView
  * @param context Android Context
+ * @param widthIsMatchParent true に設定すると width が match_parent に
  */
 @SuppressLint("ViewConstructor")
-open class EventColumnView(context: Context) : FrameLayout(context) {
+open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : FrameLayout(context) {
     /** Eventのクリックイベント */
     var onEventClickListener: ((Event) -> Unit)? = null
     /** Eventのドラッグイベント */
@@ -57,8 +58,16 @@ open class EventColumnView(context: Context) : FrameLayout(context) {
     private var elapsedTime: TimeParams? = null
 
     init {
-        layoutParams = FrameLayout.LayoutParams((widthDp * density).toInt(), FrameLayout.LayoutParams.MATCH_PARENT).apply {
-            this.setMargins(density.toInt(), 0, density.toInt(), 0)
+        val width = if (widthIsMatchParent) {
+            // widthIsMatchParent == true ならイベントの横幅が最大に
+            FrameLayout.LayoutParams.MATCH_PARENT
+        } else {
+            // そうでなければ横幅を既定の値で固定
+            (widthDp * density).toInt()
+        }
+
+        FrameLayout.LayoutParams(width, FrameLayout.LayoutParams.MATCH_PARENT).apply {
+            setMargins(density.toInt(), 0, density.toInt(), 0)
         }
 
         // 自身がドロップを受け入れられるようにする
@@ -117,7 +126,6 @@ open class EventColumnView(context: Context) : FrameLayout(context) {
                     eventBinding.bottomAdjust.visibility = View.VISIBLE
                     true
                 }
-
                 else -> true
             }
         }

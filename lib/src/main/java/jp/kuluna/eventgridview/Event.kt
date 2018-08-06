@@ -8,7 +8,9 @@ import java.util.*
 import kotlin.math.roundToInt
 
 data class Event(
-        /** 同じIDをまとめて1列に表示するためのID */
+        /** 同じIDをまとめて1列に表示するためのID
+         * EventGridAdapterで widthIsMatchParent == true としている場合は任意の値で固定してください
+         */
         var groupId: Int,
         /** 開始時間 */
         var start: Date,

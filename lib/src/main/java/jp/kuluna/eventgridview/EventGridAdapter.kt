@@ -13,8 +13,9 @@ import java.util.*
 /**
  * EventGridView用Adapter
  * @param context [Context]
+ * @param widthIsMatchParent true に設定すると EventGridColumnView の width が match_parent に
  */
-open class EventGridAdapter(val context: Context) : RecyclerView.Adapter<EventGridViewHolder>() {
+open class EventGridAdapter(private val context: Context, private val widthIsMatchParent: Boolean = false) : RecyclerView.Adapter<EventGridViewHolder>() {
     /** Eventのクリックイベント */
     var onEventClickListener: OnEventClickListener? = null
     /** Eventをドラッグしたことによる変更イベント */
@@ -51,7 +52,7 @@ open class EventGridAdapter(val context: Context) : RecyclerView.Adapter<EventGr
     /** ViewHolder全体のEventViewの配列の格納用 */
     private var eventViewGroup = mutableListOf<List<View>>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventGridViewHolder = EventGridViewHolder(EventColumnView(context))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventGridViewHolder = EventGridViewHolder(EventColumnView(context, widthIsMatchParent))
 
     override fun getItemCount(): Int = group.size
 
