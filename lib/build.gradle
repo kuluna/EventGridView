@@ -10,7 +10,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 27
         versionCode 1
-        versionName "1.0.2"
+        versionName "1.1.0"
 
         consumerProguardFiles 'proguard-rules.pro'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -45,7 +45,7 @@ publish {
     userOrg = 'kuluna'
     groupId = 'jp.kuluna'
     artifactId = 'eventgridview'
-    publishVersion = '1.0.2'
+    publishVersion = '1.1.0'
     desc = 'A day events view. Draggable.'
     website = 'https://github.com/kuluna/EventGridView'
 }

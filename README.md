@@ -11,7 +11,7 @@ A day events view. Draggable.
 Require Android 5.0+
 
 ```
-implementation 'jp.kuluna:eventgridview:1.0.0'
+implementation 'jp.kuluna:eventgridview:1.1.0'
 ```
 
 # Simple Usage
