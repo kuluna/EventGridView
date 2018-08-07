@@ -113,6 +113,13 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
     }
 
     /**
+     * イベントを取得します
+     */
+    fun getEvents():List<Event>{
+        return events
+    }
+
+    /**
      * 目盛を終了が最も遅いイベントに合わせて更新します
      */
     private fun scaleRefresh() {

@@ -9,6 +9,10 @@
         <variable
             name="overTime"
             type="int" />
+
+        <variable
+            name="counterVisibility"
+            type="boolean" />
     </data>
 
     <FrameLayout
@@ -967,18 +971,30 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="20dp"/>
+                android:layout_height="20dp" />
 
         </LinearLayout>
 
-        <jp.kuluna.eventgridview.TouchableRecyclerView
-            android:id="@+id/event_grid_recycler_view"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="40dp"
-            android:nestedScrollingEnabled="false"
-            android:clickable="true"
-            android:focusable="true"/>
+            android:orientation="horizontal">
 
+            <jp.kuluna.eventgridview.TouchableRecyclerView
+                android:id="@+id/counter_grid_recycler_view"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:nestedScrollingEnabled="false"
+                android:visibility="@{counterVisibility ? View.VISIBLE : View.GONE}" />
+
+            <jp.kuluna.eventgridview.TouchableRecyclerView
+                android:id="@+id/event_grid_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:focusable="true"
+                android:nestedScrollingEnabled="false" />
+        </LinearLayout>
     </FrameLayout>
 </layout>

@@ -86,3 +86,50 @@ data class TimeParams(
 
     val fromY = ((hour * 40) + (min * 10 / 15))
 }
+
+
+data class Counter(
+        /** 開始時間 */
+        var start: Date,
+        /** 終了時間 */
+        var end: Date,
+        /** カウントした値 */
+        var count: Int,
+        /** 最小値 */
+        var minimum: Int = 0,
+        /** 最大値 */
+        var maximum: Int = 0
+) {
+    val text: String
+        get() = count.toString()
+
+    companion object {
+        fun from(bundle: Bundle) = Event(
+                bundle.getInt("groupId"),
+                Date(bundle.getLong("start")),
+                Date(bundle.getLong("end")),
+                bundle.getString("text"),
+                bundle.getInt("backgroundColor"),
+                bundle.getInt("textColor"),
+                bundle.getParcelable("icon"),
+                bundle.getString("extra"),
+                bundle.getBoolean("draggable")
+        )
+    }
+
+    fun getCrossOverType(base: Date): CrossOver {
+        return if (DateUtils.isSameDay(start, end)) {
+            CrossOver.None
+        } else {
+            if (DateUtils.isSameDay(start, base)) {
+                CrossOver.ToNextDay
+            } else {
+                CrossOver.FromPreviousDay
+            }
+        }
+    }
+
+    enum class CrossOver {
+        None, ToNextDay, FromPreviousDay
+    }
+}

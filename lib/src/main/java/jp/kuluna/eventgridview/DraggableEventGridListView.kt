@@ -12,6 +12,7 @@ import android.view.MotionEvent
 import android.widget.FrameLayout
 import android.widget.ScrollView
 import jp.kuluna.eventgridview.databinding.ViewEventListBinding
+import java.util.*
 
 class DraggableEventGridListView : FrameLayout {
     private lateinit var binding: ViewEventListBinding
@@ -66,6 +67,10 @@ class DraggableEventGridListView : FrameLayout {
                 }
             }
         }
+
+    fun setCounter(events: List<Event>, date: Date) {
+        eventGridView.setCounter(events, date)
+    }
 
     private fun load() {
         binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.view_event_list, this, true)

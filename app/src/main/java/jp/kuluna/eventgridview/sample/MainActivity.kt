@@ -68,8 +68,75 @@ class MainActivity : AppCompatActivity() {
                     null,
                     null,
                     true))
+
+            add(Event(
+                    2,
+                    startedAt,
+                    endedAt,
+                    "ドラッグ不可",
+                    gridColor,
+                    blackColor,
+                    null,
+                    null,
+                    false))
+
+            add(Event(
+                    3,
+                    startedAt,
+                    endedAt,
+                    "ドラッグ可",
+                    gridColor,
+                    blackColor,
+                    null,
+                    null,
+                    true))
+
+            add(Event(
+                    4,
+                    startedAt,
+                    endedAt,
+                    "ドラッグ不可",
+                    gridColor,
+                    blackColor,
+                    null,
+                    null,
+                    false))
+
+            add(Event(
+                    5,
+                    startedAt,
+                    endedAt,
+                    "ドラッグ可",
+                    gridColor,
+                    blackColor,
+                    null,
+                    null,
+                    true))
+
+            add(Event(
+                    6,
+                    startedAt,
+                    endedAt,
+                    "ドラッグ不可",
+                    gridColor,
+                    blackColor,
+                    null,
+                    null,
+                    false))
+
+            add(Event(
+                    7,
+                    startedAt,
+                    endedAt,
+                    "ドラッグ可",
+                    gridColor,
+                    blackColor,
+                    null,
+                    null,
+                    true))
         }
 
         adapter.replace(events, Date())
+        binding.eventGridView.setCounter(events, Date())
     }
 }
