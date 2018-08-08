@@ -4,33 +4,49 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="counter"
             type="jp.kuluna.eventgridview.Counter" />
     </data>
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/card_view"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:foreground="?android:attr/selectableItemBackground"
-        tools:cardBackgroundColor="@android:color/white">
+        android:background="#ddd">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_gravity="center"
+            android:layout_marginBottom="1dp"
+            android:layout_marginTop="1dp"
+            android:background="@android:color/white">
+
+            <ImageView
+                android:id="@+id/alert_view"
+                android:layout_width="match_parent"
+                android:layout_height="12dp"
+                android:layout_alignBottom="@+id/text_view"
+                android:layout_marginBottom="18dp"
+                android:gravity="center"
+                android:src="@drawable/ic_counter_alert"
+                android:visibility="@{!counter.validate() ? View.VISIBLE : View.GONE}"
+                tools:ignore="ContentDescription" />
 
             <TextView
                 android:id="@+id/text_view"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
                 android:gravity="center"
                 android:text="@{counter.text}"
+                android:textColor="@{!counter.validate() ? @color/red : @android:color/black}"
+                android:textSize="16sp"
                 tools:text="Event name" />
-        </LinearLayout>
+        </RelativeLayout>
+    </FrameLayout>
 
-    </android.support.v7.widget.CardView>
 
 </layout>

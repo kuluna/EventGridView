@@ -68,8 +68,14 @@ class DraggableEventGridListView : FrameLayout {
             }
         }
 
-    fun setCounter(events: List<Event>, date: Date) {
-        eventGridView.setCounter(events, date)
+    /**
+     * Eventのカウンタを表示します
+     * @param events 集計するEventのリスト
+     * @param date 基準となる日付
+     * @param limits 各時間帯の上限・下限値(任意)
+     */
+    fun showCounter(events: List<Event>, date: Date, limits: List<Limit> = emptyList()) {
+        eventGridView.showCounter(events, date, limits)
     }
 
     private fun load() {

@@ -22,6 +22,8 @@ data class Event(
         @ColorInt var backgroundColor: Int,
         /** テキストの文字色 */
         @ColorInt var textColor: Int,
+        /** テキストの文字色 */
+        @ColorInt var borderColor: Int,
         /** イベント内に表示するアイコン */
         var icon: Bitmap? = null,
         /** 追加で保持したい値がある場合はここに代入 */
@@ -37,6 +39,7 @@ data class Event(
                 bundle.getString("text"),
                 bundle.getInt("backgroundColor"),
                 bundle.getInt("textColor"),
+                bundle.getInt("borderColor"),
                 bundle.getParcelable("icon"),
                 bundle.getString("extra"),
                 bundle.getBoolean("draggable")
@@ -50,6 +53,7 @@ data class Event(
         putString("text", text)
         putInt("backgroundColor", backgroundColor)
         putInt("textColor", textColor)
+        putInt("borderColor", borderColor)
         putParcelable("icon", icon)
         putString("extra", extra)
         putBoolean("draggable", draggable)
@@ -96,29 +100,17 @@ data class Counter(
         /** カウントした値 */
         var count: Int,
         /** 最小値 */
-        var minimum: Int = 0,
+        var minimum: Int? = null,
         /** 最大値 */
-        var maximum: Int = 0
+        var maximum: Int? = null
 ) {
     val text: String
         get() = count.toString()
 
-    companion object {
-        fun from(bundle: Bundle) = Event(
-                bundle.getInt("groupId"),
-                Date(bundle.getLong("start")),
-                Date(bundle.getLong("end")),
-                bundle.getString("text"),
-                bundle.getInt("backgroundColor"),
-                bundle.getInt("textColor"),
-                bundle.getParcelable("icon"),
-                bundle.getString("extra"),
-                bundle.getBoolean("draggable")
-        )
-    }
-
     fun getCrossOverType(base: Date): CrossOver {
-        return if (DateUtils.isSameDay(start, end)) {
+        return if (!DateUtils.isSameDay(start, base)) {
+            CrossOver.FromNextDay
+        } else if (DateUtils.isSameDay(start, end)) {
             CrossOver.None
         } else {
             if (DateUtils.isSameDay(start, base)) {
@@ -129,7 +121,28 @@ data class Counter(
         }
     }
 
+    fun validate(): Boolean {
+        if (minimum != null && minimum!! > count) {
+            return false
+        }
+        if (maximum != null && maximum!! < count) {
+            return false
+        }
+        return true
+    }
+
     enum class CrossOver {
-        None, ToNextDay, FromPreviousDay
+        None, ToNextDay, FromPreviousDay, FromNextDay
     }
 }
+
+data class Limit(
+        /** 開始時間 */
+        var start: Date,
+        /** 終了時間 */
+        var end: Date,
+        /** 最小値 */
+        var minimum: Int = 0,
+        /** 最大値 */
+        var maximum: Int = 0
+)

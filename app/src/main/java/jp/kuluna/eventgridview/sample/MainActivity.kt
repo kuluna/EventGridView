@@ -43,8 +43,11 @@ class MainActivity : AppCompatActivity() {
             time = startedAt
             add(Calendar.HOUR_OF_DAY, period)
         }.time
-        val gridColor = ContextCompat.getColor(this, android.R.color.holo_blue_light)
-        val blackColor = ContextCompat.getColor(this, android.R.color.black)
+        val textColor = ContextCompat.getColor(this, android.R.color.black)
+        val blueGridColor = ContextCompat.getColor(this, android.R.color.holo_blue_light)
+        val blueBorderColor = ContextCompat.getColor(this, android.R.color.holo_blue_dark)
+        val orangeGridColor = ContextCompat.getColor(this, android.R.color.holo_orange_light)
+        val orangeBorderColor = ContextCompat.getColor(this, android.R.color.holo_orange_dark)
 
         val events: List<Event> = ArrayList<Event>().apply {
             add(Event(
@@ -52,8 +55,9 @@ class MainActivity : AppCompatActivity() {
                     startedAt,
                     endedAt,
                     "ドラッグ不可",
-                    gridColor,
-                    blackColor,
+                    blueGridColor,
+                    textColor,
+                    blueBorderColor,
                     null,
                     null,
                     false))
@@ -63,8 +67,9 @@ class MainActivity : AppCompatActivity() {
                     startedAt,
                     endedAt,
                     "ドラッグ可",
-                    gridColor,
-                    blackColor,
+                    blueGridColor,
+                    textColor,
+                    blueBorderColor,
                     null,
                     null,
                     true))
@@ -74,8 +79,9 @@ class MainActivity : AppCompatActivity() {
                     startedAt,
                     endedAt,
                     "ドラッグ不可",
-                    gridColor,
-                    blackColor,
+                    orangeGridColor,
+                    textColor,
+                    orangeBorderColor,
                     null,
                     null,
                     false))
@@ -85,58 +91,26 @@ class MainActivity : AppCompatActivity() {
                     startedAt,
                     endedAt,
                     "ドラッグ可",
-                    gridColor,
-                    blackColor,
-                    null,
-                    null,
-                    true))
-
-            add(Event(
-                    4,
-                    startedAt,
-                    endedAt,
-                    "ドラッグ不可",
-                    gridColor,
-                    blackColor,
-                    null,
-                    null,
-                    false))
-
-            add(Event(
-                    5,
-                    startedAt,
-                    endedAt,
-                    "ドラッグ可",
-                    gridColor,
-                    blackColor,
-                    null,
-                    null,
-                    true))
-
-            add(Event(
-                    6,
-                    startedAt,
-                    endedAt,
-                    "ドラッグ不可",
-                    gridColor,
-                    blackColor,
-                    null,
-                    null,
-                    false))
-
-            add(Event(
-                    7,
-                    startedAt,
-                    endedAt,
-                    "ドラッグ可",
-                    gridColor,
-                    blackColor,
+                    orangeGridColor,
+                    textColor,
+                    orangeBorderColor,
                     null,
                     null,
                     true))
         }
 
         adapter.replace(events, Date())
-        binding.eventGridView.setCounter(events, Date())
+
+        // Eventのカウンタを表示する際は下のように記述してください
+        /*
+        val limits: List<Limit> = ArrayList<Limit>().apply {
+            add(Limit(
+                    startedAt,
+                    endedAt,
+                    3,
+                    6))
+        }
+        binding.eventGridView.showCounter(events, Date(), limits)
+        */
     }
 }

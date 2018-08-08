@@ -105,8 +105,8 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
         eventViewGroup.forEach { views ->
             views.forEach { view ->
                 DataBindingUtil.bind<ViewEventBinding>(view)?.run {
-                    topAdjust.visibility = View.GONE
-                    bottomAdjust.visibility = View.GONE
+                    topAdjust.visibility = View.INVISIBLE
+                    bottomAdjust.visibility = View.INVISIBLE
                 }
             }
         }

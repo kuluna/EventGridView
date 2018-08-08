@@ -15,7 +15,6 @@ import java.util.*
  */
 @SuppressLint("ViewConstructor")
 open class CounterColumnView(context: Context) : FrameLayout(context) {
-
     /** ディスプレイの密度取得 (この値にdpを掛けるとpxになる) */
     private val density = context.resources.displayMetrics.density
     /** RecyclerViewにおけるこのViewの現在のPosition */
@@ -31,9 +30,9 @@ open class CounterColumnView(context: Context) : FrameLayout(context) {
     }
 
     /**
-     * イベントを表示します。
+     * カウンタを表示します。
      * @param day 表示する日
-     * @param counters カウンターリスト
+     * @param counters カウンタリスト
      * @param layoutPosition RecyclerViewから見たLayoutPosition
      */
     fun set(day: Date, counters: List<Counter>, layoutPosition: Int) {
@@ -43,7 +42,7 @@ open class CounterColumnView(context: Context) : FrameLayout(context) {
 
         val inflater = LayoutInflater.from(context)
 
-        counters.forEachIndexed { index, counter ->
+        counters.forEach { counter ->
             val binding = DataBindingUtil.inflate<ViewCounterBinding>(inflater, R.layout.view_counter, null, false)
             binding.counter = counter
 
@@ -65,6 +64,12 @@ open class CounterColumnView(context: Context) : FrameLayout(context) {
                 Counter.CrossOver.FromPreviousDay -> {
                     val endParams = getParams(counter.end)
                     0 to endParams.fromY
+                }
+
+                Counter.CrossOver.FromNextDay -> {
+                    val startParams = getParams(counter.start, 1)
+                    val endParams = getParams(counter.end, 1)
+                    startParams.fromY to endParams.fromY - startParams.fromY
                 }
             }
 

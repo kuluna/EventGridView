@@ -11,14 +11,12 @@ import java.util.*
  * @param context [Context]
  */
 open class CounterGridAdapter(private val context: Context) : RecyclerView.Adapter<CounterGridViewHolder>() {
-    /** 目盛が変わったことによる変更イベント */
-    var onScaleRefreshListener: ((Int) -> Unit)? = null
-
     private var counters = emptyList<Counter>()
-    private var day = Date()
     /** 最後の終了時刻 */
     private val lastEnd
         get() = counters.maxBy { it.end }?.end
+    /** 基準日 */
+    var day = Date()
     /** 24時間を超えた時間 */
     val overTime: Int
         get() {
@@ -57,7 +55,6 @@ open class CounterGridAdapter(private val context: Context) : RecyclerView.Adapt
         this.counters = counters
         this.day = day
 
-        scaleRefresh()
         notifyDataSetChanged()
     }
 
@@ -68,16 +65,6 @@ open class CounterGridAdapter(private val context: Context) : RecyclerView.Adapt
     fun replace(counters: List<Counter>) {
         this.counters = counters
 
-        scaleRefresh()
         notifyDataSetChanged()
-    }
-
-    /**
-     * 目盛を終了が最も遅いイベントに合わせて更新します
-     */
-    private fun scaleRefresh() {
-        onScaleRefreshListener?.let {
-            it(overTime)
-        }
     }
 }
