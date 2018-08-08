@@ -38,6 +38,7 @@ class EventGridView : FrameLayout {
         binding.counterGridRecyclerView.adapter = counterGridAdapter
         this.limits = limits
 
+        // カウンタの状態が変わる区切りを保存する
         var periods = mutableListOf<Date>()
         for (event in events) {
             periods.add(event.start)
@@ -48,8 +49,9 @@ class EventGridView : FrameLayout {
             periods.add(limit.end)
         }
         periods = periods.distinct().sorted().toMutableList()
-        val counters = mutableListOf<Counter>()
 
+        // カウンタのリストを作成する
+        val counters = mutableListOf<Counter>()
         for (i in 0..(periods.size - 2)) {
             val period = periods[i]
             val limit = limits.firstOrNull { it.start <= period && it.end > period }
