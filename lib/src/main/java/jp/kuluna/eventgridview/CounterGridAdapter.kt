@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import java.util.*
 
 /**
- * EventGridView用Adapter
+ * CounterGridView用Adapter
  * @param context [Context]
  */
 open class CounterGridAdapter(private val context: Context) : RecyclerView.Adapter<CounterGridViewHolder>() {
@@ -33,7 +33,7 @@ open class CounterGridAdapter(private val context: Context) : RecyclerView.Adapt
         }
     /** CounterViewColumnで生成されたのCounterView格納用 */
     private var counterViews = mutableListOf<View>()
-    /** ViewHolder全体のEventViewの配列の格納用 */
+    /** ViewHolder全体のCounterViewの配列の格納用 */
     private var counterViewGroup = mutableListOf<List<View>>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CounterGridViewHolder = CounterGridViewHolder(CounterColumnView(context))
@@ -49,7 +49,7 @@ open class CounterGridAdapter(private val context: Context) : RecyclerView.Adapt
 
     /**
      * カウンタを全てクリアして引数で渡すカウンタに差し替えます。
-     * @param counters カウンターリストリスト
+     * @param counters カウンタリスト
      */
     fun replace(counters: List<Counter>, day: Date) {
         this.counters = counters
@@ -60,7 +60,7 @@ open class CounterGridAdapter(private val context: Context) : RecyclerView.Adapt
 
     /**
      * カウンタを全てクリアして引数で渡すカウンタに差し替えます。
-     * @param counters カウンターリストリスト
+     * @param counters カウンタリスト
      */
     fun replace(counters: List<Counter>) {
         this.counters = counters

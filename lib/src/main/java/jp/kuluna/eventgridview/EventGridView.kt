@@ -61,7 +61,7 @@ class EventGridView : FrameLayout {
         counterGridAdapter.replace(counters, date)
     }
 
-    /** カウンターを更新します */
+    /** カウンタを更新します */
     private fun refreshCounter(events: List<Event>) {
         showCounter(events, counterGridAdapter.day, limits!!)
     }
