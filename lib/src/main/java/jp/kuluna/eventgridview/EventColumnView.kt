@@ -67,6 +67,7 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
         }
 
         layoutParams = FrameLayout.LayoutParams(width, FrameLayout.LayoutParams.MATCH_PARENT).apply {
+            // イベントの左右に1dpのマージンを開ける
             setMargins(density.toInt(), 0, density.toInt(), 0)
         }
 

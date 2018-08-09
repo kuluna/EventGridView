@@ -79,12 +79,12 @@ class DraggableEventGridListView : FrameLayout {
     }
 
     /** イベントにクリックリスナを実装します */
-    fun setOnEventClickListener(onEventClickListener: OnEventClickListener?) {
+    fun setOnEventClickListener(onEventClickListener: ((Event) -> Unit)?) {
         eventGridView.setOnEventClickListener(onEventClickListener)
     }
 
     /** カウンタにクリックリスナを実装します */
-    fun setOnCounterClickListener(onCounterClickListener: OnCounterClickListener?) {
+    fun setOnCounterClickListener(onCounterClickListener: ((Counter) -> Unit)?) {
         eventGridView.setOnCounterClickListener(onCounterClickListener)
     }
 

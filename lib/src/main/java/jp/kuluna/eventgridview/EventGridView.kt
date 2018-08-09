@@ -13,7 +13,7 @@ import java.util.*
 class EventGridView : FrameLayout {
     private val binding: ViewEventGridBinding
     private var counterGridAdapter: CounterGridAdapter? = null
-    private var limits: List<Limit>? = null
+    private var limits: List<Limit> = emptyList()
     var adapter: EventGridAdapter?
         get() = binding.eventGridRecyclerView.adapter as? EventGridAdapter
         set(value) {
@@ -68,7 +68,7 @@ class EventGridView : FrameLayout {
             periods.add(event.start)
             periods.add(event.end)
         }
-        for (limit in limits!!) {
+        for (limit in limits) {
             periods.add(limit.start)
             periods.add(limit.end)
         }
@@ -78,19 +78,19 @@ class EventGridView : FrameLayout {
         val counters = mutableListOf<Counter>()
         for (i in 0..(periods.size - 2)) {
             val period = periods[i]
-            val limit = limits!!.firstOrNull { it.start <= period && it.end > period }
+            val limit = limits.firstOrNull { it.start <= period && it.end > period }
             counters.add(Counter(periods[i], periods[i + 1], events.count { it.start <= period && it.end > period }, limit?.minimum, limit?.maximum))
         }
         counterGridAdapter?.replace(counters, counterGridAdapter!!.day)
     }
 
     /** イベントにクリックリスナを実装します */
-    fun setOnEventClickListener(onEventClickListener: OnEventClickListener?) {
+    fun setOnEventClickListener(onEventClickListener: ((Event) -> Unit)?) {
         adapter?.onEventClickListener = onEventClickListener
     }
 
     /** カウンタにクリックリスナを実装します */
-    fun setOnCounterClickListener(onCounterClickListener: OnCounterClickListener?) {
+    fun setOnCounterClickListener(onCounterClickListener: ((Counter) -> Unit)?) {
         counterGridAdapter?.onCounterClickListener = onCounterClickListener
     }
 

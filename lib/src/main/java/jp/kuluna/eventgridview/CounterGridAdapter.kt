@@ -12,7 +12,7 @@ import java.util.*
  */
 open class CounterGridAdapter(private val context: Context) : RecyclerView.Adapter<CounterGridViewHolder>() {
     /** Counterのクリックイベント */
-    var onCounterClickListener: OnCounterClickListener? = null
+    var onCounterClickListener: ((Counter) -> Unit)? = null
 
     private var counters = emptyList<Counter>()
     /** 最後の終了時刻 */
@@ -47,7 +47,7 @@ open class CounterGridAdapter(private val context: Context) : RecyclerView.Adapt
         val counter = counters
         holder.view.set(day, counter, holder.layoutPosition)
         holder.view.onCounterClickListener = {
-            onCounterClickListener?.onCounterClick(it)
+            onCounterClickListener?.invoke(it)
         }
         counterViews = holder.view.counterViews
         counterViewGroup.add(counterViews)
@@ -60,16 +60,6 @@ open class CounterGridAdapter(private val context: Context) : RecyclerView.Adapt
     fun replace(counters: List<Counter>, day: Date) {
         this.counters = counters
         this.day = day
-
-        notifyDataSetChanged()
-    }
-
-    /**
-     * カウンタを全てクリアして引数で渡すカウンタに差し替えます。
-     * @param counters カウンタリスト
-     */
-    fun replace(counters: List<Counter>) {
-        this.counters = counters
 
         notifyDataSetChanged()
     }

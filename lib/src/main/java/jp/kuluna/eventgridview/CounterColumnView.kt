@@ -10,7 +10,7 @@ import jp.kuluna.eventgridview.databinding.ViewCounterBinding
 import java.util.*
 
 /**
- * イベントを1列内に表示するためのView
+ * カウンタを1列内に表示するためのView
  * @param context Android Context
  */
 @SuppressLint("ViewConstructor")
@@ -27,6 +27,7 @@ open class CounterColumnView(context: Context) : FrameLayout(context) {
 
     init {
         layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT).apply {
+            // カウンタの左右に1dpのマージンを開ける
             setMargins(density.toInt(), 0, density.toInt(), 0)
         }
     }
