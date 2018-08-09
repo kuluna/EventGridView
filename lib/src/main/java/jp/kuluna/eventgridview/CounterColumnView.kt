@@ -19,6 +19,8 @@ open class CounterColumnView(context: Context) : FrameLayout(context) {
     var onCounterClickListener: ((Counter) -> Unit)? = null
     /** ディスプレイの密度取得 (この値にdpを掛けるとpxになる) */
     private val density = context.resources.displayMetrics.density
+    /** Eventの横幅(dp) */
+    private val widthDp = 40
     /** RecyclerViewにおけるこのViewの現在のPosition */
     private var layoutPosition = 0
     private var counters: MutableList<Counter> = mutableListOf()
@@ -26,7 +28,7 @@ open class CounterColumnView(context: Context) : FrameLayout(context) {
     var counterViews = mutableListOf<View>()
 
     init {
-        layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT).apply {
+        layoutParams = FrameLayout.LayoutParams((widthDp * density).toInt(), FrameLayout.LayoutParams.MATCH_PARENT).apply {
             // カウンタの左右に1dpのマージンを開ける
             setMargins(density.toInt(), 0, density.toInt(), 0)
         }
