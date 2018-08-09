@@ -15,6 +15,8 @@ import java.util.*
  */
 @SuppressLint("ViewConstructor")
 open class CounterColumnView(context: Context) : FrameLayout(context) {
+    /** Counterのクリックイベント */
+    var onCounterClickListener: ((Counter) -> Unit)? = null
     /** ディスプレイの密度取得 (この値にdpを掛けるとpxになる) */
     private val density = context.resources.displayMetrics.density
     /** RecyclerViewにおけるこのViewの現在のPosition */
@@ -78,6 +80,9 @@ open class CounterColumnView(context: Context) : FrameLayout(context) {
                 topMargin = (fromY * density).toInt()
             }
 
+            binding.counterFrame.setOnClickListener {
+                onCounterClickListener?.invoke(counter)
+            }
             addView(binding.root, FrameLayout.LayoutParams(marginParams))
         }
     }

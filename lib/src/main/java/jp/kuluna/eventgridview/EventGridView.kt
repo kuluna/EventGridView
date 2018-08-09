@@ -57,13 +57,22 @@ class EventGridView : FrameLayout {
             val limit = limits.firstOrNull { it.start <= period && it.end > period }
             counters.add(Counter(periods[i], periods[i + 1], events.count { it.start <= period && it.end > period }, limit?.minimum, limit?.maximum))
         }
-
         counterGridAdapter.replace(counters, date)
     }
 
     /** カウンタを更新します */
     private fun refreshCounter(events: List<Event>) {
         showCounter(events, counterGridAdapter.day, limits!!)
+    }
+
+    /** カウンタにクリックリスナを実装します */
+    fun setOnEventClickListener(onEventClickListener: OnEventClickListener?) {
+        adapter?.onEventClickListener = onEventClickListener
+    }
+
+    /** カウンタにクリックリスナを実装します */
+    fun setOnCounterClickListener(onCounterClickListener: OnCounterClickListener?) {
+        counterGridAdapter.onCounterClickListener = onCounterClickListener
     }
 
     constructor(context: Context) : this(context, null)

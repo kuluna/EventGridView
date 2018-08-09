@@ -11,6 +11,9 @@ import java.util.*
  * @param context [Context]
  */
 open class CounterGridAdapter(private val context: Context) : RecyclerView.Adapter<CounterGridViewHolder>() {
+    /** Counterのクリックイベント */
+    var onCounterClickListener: OnCounterClickListener? = null
+
     private var counters = emptyList<Counter>()
     /** 最後の終了時刻 */
     private val lastEnd
@@ -43,6 +46,9 @@ open class CounterGridAdapter(private val context: Context) : RecyclerView.Adapt
     override fun onBindViewHolder(holder: CounterGridViewHolder, position: Int) {
         val counter = counters
         holder.view.set(day, counter, holder.layoutPosition)
+        holder.view.onCounterClickListener = {
+            onCounterClickListener?.onCounterClick(it)
+        }
         counterViews = holder.view.counterViews
         counterViewGroup.add(counterViews)
     }

@@ -78,6 +78,17 @@ class DraggableEventGridListView : FrameLayout {
         eventGridView.showCounter(events, date, limits)
     }
 
+
+    /** イベントにクリックリスナを実装します */
+    fun setOnEventClickListener(onEventClickListener: OnEventClickListener?) {
+        eventGridView.setOnEventClickListener(onEventClickListener)
+    }
+
+    /** カウンタにクリックリスナを実装します */
+    fun setOnCounterClickListener(onCounterClickListener: OnCounterClickListener?) {
+        eventGridView.setOnCounterClickListener(onCounterClickListener)
+    }
+
     private fun load() {
         binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.view_event_list, this, true)
         handler = ScrollHandler(binding.scrollView)

@@ -4,14 +4,14 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import jp.kuluna.eventgridview.Event
-import jp.kuluna.eventgridview.EventGridAdapter
+import jp.kuluna.eventgridview.*
 import jp.kuluna.eventgridview.sample.databinding.ActivityMainBinding
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnEventClickListener, OnCounterClickListener {
     private lateinit var adapter: EventGridAdapter
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,6 +20,9 @@ class MainActivity : AppCompatActivity() {
         adapter = EventGridAdapter(this)
         binding.eventGridView.adapter = adapter
         showEvents()
+        // 各イベントは下記のように実装してください
+        binding.eventGridView.setOnEventClickListener(this)
+        binding.eventGridView.setOnCounterClickListener(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -112,5 +115,15 @@ class MainActivity : AppCompatActivity() {
         }
         binding.eventGridView.showCounter(events, Date(), limits)
         */
+    }
+
+    /** イベントのクリックイベント */
+    override fun onEventClick(event: Event) {
+        Log.i("MainActivity", "onEventClick")
+    }
+
+    /** カウンタのクリックイベント */
+    override fun onCounterClick(counter: Counter) {
+        Log.i("MainActivity", "onCounterClick")
     }
 }

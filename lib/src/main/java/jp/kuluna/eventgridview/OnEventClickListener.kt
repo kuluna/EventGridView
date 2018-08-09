@@ -7,3 +7,7 @@ interface OnEventClickListener {
 interface OnEventChangedListener {
     fun onChange(oldEvent: Event, newEvent: Event)
 }
+
+interface OnCounterClickListener {
+    fun onCounterClick(counter: Counter)
+}

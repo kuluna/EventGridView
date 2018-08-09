@@ -985,6 +985,8 @@
                 android:id="@+id/counter_grid_recycler_view"
                 android:layout_width="40dp"
                 android:layout_height="match_parent"
+                android:clickable="true"
+                android:focusable="true"
                 android:nestedScrollingEnabled="false"
                 android:visibility="@{counterVisibility ? View.VISIBLE : View.GONE}" />
 
