@@ -41,7 +41,7 @@ open class CounterGridAdapter(private val context: Context) : RecyclerView.Adapt
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CounterGridViewHolder = CounterGridViewHolder(CounterColumnView(context))
 
-    override fun getItemCount(): Int = counters.size
+    override fun getItemCount(): Int = 1
 
     override fun onBindViewHolder(holder: CounterGridViewHolder, position: Int) {
         val counter = counters
