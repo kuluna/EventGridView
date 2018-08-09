@@ -15,12 +15,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:foreground="?android:attr/selectableItemBackground"
-        app:cardBackgroundColor="@{event.backgroundColor}"
+        app:cardBackgroundColor="@{event.borderColor}"
         tools:cardBackgroundColor="@android:color/white">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="1dp"
+            android:background="@{event.backgroundColor}"
             android:orientation="vertical">
 
             <jp.kuluna.eventgridview.TouchableImageView

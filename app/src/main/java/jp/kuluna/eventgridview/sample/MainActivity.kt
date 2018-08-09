@@ -4,6 +4,7 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import jp.kuluna.eventgridview.Event
@@ -20,6 +21,13 @@ class MainActivity : AppCompatActivity() {
         adapter = EventGridAdapter(this)
         binding.eventGridView.adapter = adapter
         showEvents()
+        // 各イベントは下記のように実装してください
+        binding.eventGridView.setOnEventClickListener {
+            Log.i("MainActivity", "onEventClick")
+        }
+        binding.eventGridView.setOnCounterClickListener {
+            Log.i("MainActivity", "onCounterClick")
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -43,8 +51,11 @@ class MainActivity : AppCompatActivity() {
             time = startedAt
             add(Calendar.HOUR_OF_DAY, period)
         }.time
-        val gridColor = ContextCompat.getColor(this, android.R.color.holo_blue_light)
-        val blackColor = ContextCompat.getColor(this, android.R.color.black)
+        val textColor = ContextCompat.getColor(this, android.R.color.black)
+        val blueGridColor = ContextCompat.getColor(this, android.R.color.holo_blue_light)
+        val blueBorderColor = ContextCompat.getColor(this, android.R.color.holo_blue_dark)
+        val orangeGridColor = ContextCompat.getColor(this, android.R.color.holo_orange_light)
+        val orangeBorderColor = ContextCompat.getColor(this, android.R.color.holo_orange_dark)
 
         val events: List<Event> = ArrayList<Event>().apply {
             add(Event(
@@ -52,8 +63,9 @@ class MainActivity : AppCompatActivity() {
                     startedAt,
                     endedAt,
                     "ドラッグ不可",
-                    gridColor,
-                    blackColor,
+                    blueGridColor,
+                    textColor,
+                    blueBorderColor,
                     null,
                     null,
                     false))
@@ -63,13 +75,50 @@ class MainActivity : AppCompatActivity() {
                     startedAt,
                     endedAt,
                     "ドラッグ可",
-                    gridColor,
-                    blackColor,
+                    blueGridColor,
+                    textColor,
+                    blueBorderColor,
+                    null,
+                    null,
+                    true))
+
+            add(Event(
+                    2,
+                    startedAt,
+                    endedAt,
+                    "ドラッグ不可",
+                    orangeGridColor,
+                    textColor,
+                    orangeBorderColor,
+                    null,
+                    null,
+                    false))
+
+            add(Event(
+                    3,
+                    startedAt,
+                    endedAt,
+                    "ドラッグ可",
+                    orangeGridColor,
+                    textColor,
+                    orangeBorderColor,
                     null,
                     null,
                     true))
         }
 
         adapter.replace(events, Date())
+
+        // Eventのカウンタを表示する際は下のように記述してください
+        /*
+        val limits: List<Limit> = ArrayList<Limit>().apply {
+            add(Limit(
+                    startedAt,
+                    endedAt,
+                    3,
+                    6))
+        }
+        binding.eventGridView.showCounter(events, Date(), limits)
+        */
     }
 }

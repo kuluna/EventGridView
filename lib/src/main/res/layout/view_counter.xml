@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="counter"
+            type="jp.kuluna.eventgridview.Counter" />
+    </data>
+
+    <FrameLayout
+        android:id="@+id/counter_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ddd"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="1dp"
+            android:layout_marginTop="1dp"
+            android:background="@android:color/white">
+
+            <ImageView
+                android:id="@+id/alert_view"
+                android:layout_width="match_parent"
+                android:layout_height="12dp"
+                android:layout_alignBottom="@+id/text_view"
+                android:layout_marginBottom="18dp"
+                android:gravity="center"
+                android:src="@drawable/ic_counter_alert"
+                android:visibility="@{!counter.validate() ? View.VISIBLE : View.GONE}"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:text="@{counter.text}"
+                android:textColor="@{!counter.validate() ? @color/red : @android:color/black}"
+                android:textSize="16sp"
+                tools:text="Event name" />
+        </RelativeLayout>
+    </FrameLayout>
+</layout>

@@ -17,9 +17,9 @@ import java.util.*
  */
 open class EventGridAdapter(private val context: Context, private val widthIsMatchParent: Boolean = false) : RecyclerView.Adapter<EventGridViewHolder>() {
     /** Eventのクリックイベント */
-    var onEventClickListener: OnEventClickListener? = null
+    var onEventClickListener: ((Event) -> Unit)? = null
     /** Eventをドラッグしたことによる変更イベント */
-    var onEventChangedListener: OnEventChangedListener? = null
+    var onEventChangedListener: ((Event, Event) -> Unit)? = null
     /** 目盛が変わったことによる変更イベント */
     var onScaleRefreshListener: ((Int) -> Unit)? = null
     /** ドラッグのイベント */
@@ -60,7 +60,7 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
         val event = group[holder.layoutPosition].second
         holder.view.set(day, event, holder.layoutPosition)
         holder.view.onEventClickListener = {
-            onEventClickListener?.onEventClick(it)
+            onEventClickListener?.invoke(it)
         }
         holder.view.onEventDragListener = {
             onEventDragListener?.let { onDrag -> onDrag(it) }
@@ -69,7 +69,7 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
             onEventStretchListener?.let { onStretch -> onStretch(it) }
         }
         holder.view.onEventChangedListener = { old, new, hideAll ->
-            onEventChangedListener?.onChange(old, new)
+            onEventChangedListener?.invoke(old, new)
 
             // イベント長さ調整ボタンを全て非表示
             if (hideAll) {
@@ -110,6 +110,13 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
                 }
             }
         }
+    }
+
+    /**
+     * イベントを取得します
+     */
+    fun getEvents(): List<Event> {
+        return events
     }
 
     /**

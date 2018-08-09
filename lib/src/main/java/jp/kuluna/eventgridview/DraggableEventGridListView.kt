@@ -12,6 +12,7 @@ import android.view.MotionEvent
 import android.widget.FrameLayout
 import android.widget.ScrollView
 import jp.kuluna.eventgridview.databinding.ViewEventListBinding
+import java.util.*
 
 class DraggableEventGridListView : FrameLayout {
     private lateinit var binding: ViewEventListBinding
@@ -66,6 +67,26 @@ class DraggableEventGridListView : FrameLayout {
                 }
             }
         }
+
+    /**
+     * Eventのカウンタを表示します
+     * @param events 集計するEventのリスト
+     * @param date 基準となる日付
+     * @param limits 各時間帯の上限・下限値(任意)
+     */
+    fun showCounter(events: List<Event>, date: Date, limits: List<Limit> = emptyList()) {
+        eventGridView.showCounter(events, date, limits)
+    }
+
+    /** イベントにクリックリスナを実装します */
+    fun setOnEventClickListener(onEventClickListener: ((Event) -> Unit)?) {
+        eventGridView.setOnEventClickListener(onEventClickListener)
+    }
+
+    /** カウンタにクリックリスナを実装します */
+    fun setOnCounterClickListener(onCounterClickListener: ((Counter) -> Unit)?) {
+        eventGridView.setOnCounterClickListener(onCounterClickListener)
+    }
 
     private fun load() {
         binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.view_event_list, this, true)
