@@ -9,6 +9,7 @@ import android.view.Menu
 import android.view.MenuItem
 import jp.kuluna.eventgridview.Event
 import jp.kuluna.eventgridview.EventGridAdapter
+import jp.kuluna.eventgridview.Limit
 import jp.kuluna.eventgridview.sample.databinding.ActivityMainBinding
 import java.util.*
 
@@ -23,10 +24,10 @@ class MainActivity : AppCompatActivity() {
         showEvents()
         // 各イベントは下記のように実装してください
         binding.eventGridView.setOnEventClickListener {
-            Log.i("MainActivity", "onEventClick")
+            Log.i("MainActivity", it.toString())
         }
         binding.eventGridView.setOnCounterClickListener {
-            Log.i("MainActivity", "onCounterClick")
+            Log.i("MainActivity", it.toString())
         }
     }
 
@@ -37,88 +38,52 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.reloadButton -> {
-                showEvents()
-            }
+            R.id.reloadButton -> showEvents()
         }
         return true
     }
 
     private fun showEvents() {
-        val period = Random().nextInt(24)
-        val startedAt = Date()
-        val endedAt = Calendar.getInstance().apply {
-            time = startedAt
-            add(Calendar.HOUR_OF_DAY, period)
-        }.time
         val textColor = ContextCompat.getColor(this, android.R.color.black)
         val blueGridColor = ContextCompat.getColor(this, android.R.color.holo_blue_light)
         val blueBorderColor = ContextCompat.getColor(this, android.R.color.holo_blue_dark)
-        val orangeGridColor = ContextCompat.getColor(this, android.R.color.holo_orange_light)
-        val orangeBorderColor = ContextCompat.getColor(this, android.R.color.holo_orange_dark)
 
-        val events: List<Event> = ArrayList<Event>().apply {
-            add(Event(
-                    0,
+        val events: List<Event> = (0..20).map {
+            val random = Random().nextInt(24)
+            val startedAt = Calendar.getInstance().apply {
+                set(Calendar.HOUR_OF_DAY, random)
+            }.time
+            val endedAt = Calendar.getInstance().apply {
+                time = startedAt
+                add(Calendar.HOUR_OF_DAY, random)
+            }.time
+
+            Event(
+                    it,
                     startedAt,
                     endedAt,
-                    "ドラッグ不可",
+                    "Event$it",
                     blueGridColor,
                     textColor,
                     blueBorderColor,
                     null,
                     null,
-                    false))
-
-            add(Event(
-                    1,
-                    startedAt,
-                    endedAt,
-                    "ドラッグ可",
-                    blueGridColor,
-                    textColor,
-                    blueBorderColor,
-                    null,
-                    null,
-                    true))
-
-            add(Event(
-                    2,
-                    startedAt,
-                    endedAt,
-                    "ドラッグ不可",
-                    orangeGridColor,
-                    textColor,
-                    orangeBorderColor,
-                    null,
-                    null,
-                    false))
-
-            add(Event(
-                    3,
-                    startedAt,
-                    endedAt,
-                    "ドラッグ可",
-                    orangeGridColor,
-                    textColor,
-                    orangeBorderColor,
-                    null,
-                    null,
-                    true))
+                    true)
         }
 
         adapter.replace(events, Date())
 
-        // Eventのカウンタを表示する際は下のように記述してください
-        /*
-        val limits: List<Limit> = ArrayList<Limit>().apply {
-            add(Limit(
-                    startedAt,
-                    endedAt,
-                    3,
-                    6))
-        }
+        // Eventのカウンタを表示する
+        val countStart = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 10)
+        }.time
+        val countEnd = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 14)
+        }.time
+        val limits: List<Limit> = listOf(
+                Limit(countStart, countEnd, 3, 6)
+        )
+
         binding.eventGridView.showCounter(events, Date(), limits)
-        */
     }
 }
