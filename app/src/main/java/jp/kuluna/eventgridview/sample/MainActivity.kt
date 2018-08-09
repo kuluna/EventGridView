@@ -9,7 +9,6 @@ import android.view.Menu
 import android.view.MenuItem
 import jp.kuluna.eventgridview.Event
 import jp.kuluna.eventgridview.EventGridAdapter
-import jp.kuluna.eventgridview.Limit
 import jp.kuluna.eventgridview.sample.databinding.ActivityMainBinding
 import java.util.*
 
