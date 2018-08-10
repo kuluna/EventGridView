@@ -19,7 +19,7 @@ class EventGridView : FrameLayout {
         set(value) {
             binding.eventGridRecyclerView.adapter = value
             value?.onScaleRefreshListener = {
-                binding.overTime = it
+                binding.overTime = kotlin.math.max(it, counterGridAdapter?.overTime ?: -1)
                 if (binding.counterVisibility) {
                     refreshCounter(value?.getEvents() ?: emptyList())
                 }
@@ -33,7 +33,8 @@ class EventGridView : FrameLayout {
      * @param limits 各時間帯の上限・下限値(任意)
      */
     fun showCounter(events: List<Event>, date: Date, limits: List<Limit> = emptyList()) {
-        counterGridAdapter = CounterGridAdapter(context)
+        val counterGridAdapter = CounterGridAdapter(context)
+        this.counterGridAdapter = counterGridAdapter
         binding.counterVisibility = true
         binding.counterGridRecyclerView.adapter = counterGridAdapter
         this.limits = limits
@@ -57,11 +58,14 @@ class EventGridView : FrameLayout {
             val limit = limits.firstOrNull { it.start <= period && it.end > period }
             counters.add(Counter(periods[i], periods[i + 1], events.count { it.start <= period && it.end > period }, limit?.minimum, limit?.maximum))
         }
-        counterGridAdapter?.replace(counters, date)
+        counterGridAdapter.replace(counters, date)
+        // 超過時間を再設定します
+        binding.overTime = kotlin.math.max(adapter?.overTime ?: -1, counterGridAdapter.overTime)
     }
 
     /** カウンタを更新します */
     private fun refreshCounter(events: List<Event>) {
+        val counterGridAdapter = this.counterGridAdapter ?: return
         // カウンタの状態が変わる区切りを保存する
         var periods = mutableListOf<Date>()
         for (event in events) {
@@ -81,7 +85,9 @@ class EventGridView : FrameLayout {
             val limit = limits.firstOrNull { it.start <= period && it.end > period }
             counters.add(Counter(periods[i], periods[i + 1], events.count { it.start <= period && it.end > period }, limit?.minimum, limit?.maximum))
         }
-        counterGridAdapter?.replace(counters, counterGridAdapter!!.day)
+        counterGridAdapter.replace(counters, counterGridAdapter.day)
+        // 超過時間を再設定します
+        binding.overTime = kotlin.math.max(adapter?.overTime ?: -1, counterGridAdapter.overTime)
     }
 
     /** イベントにクリックリスナを実装します */
