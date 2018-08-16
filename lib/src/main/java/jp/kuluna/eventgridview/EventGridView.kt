@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
+import android.widget.ArrayAdapter
 import android.widget.FrameLayout
 import jp.kuluna.eventgridview.databinding.ListScaleBinding
 import jp.kuluna.eventgridview.databinding.ViewEventGridBinding
@@ -25,7 +25,6 @@ class EventGridView : FrameLayout {
             binding.eventGridRecyclerView.adapter = value
             value?.onScaleRefreshListener = {
                 scaleListAdapter.setItemsIn(1, 24 + (counterGridAdapter?.overTime ?: -1))
-                //binding.overTime = kotlin.math.max(it, counterGridAdapter?.overTime ?: -1)
                 if (binding.counterVisibility) {
                     refreshCounter(value?.getEvents() ?: emptyList())
                 }
@@ -65,9 +64,8 @@ class EventGridView : FrameLayout {
             counters.add(Counter(periods[i], periods[i + 1], events.count { it.start <= period && it.end > period }, limit?.minimum, limit?.maximum))
         }
         counterGridAdapter.replace(counters, date)
-        // 超過時間を再設定します
+        // 目盛りを再設定します
         scaleListAdapter.setItemsIn(1, 24 + counterGridAdapter.overTime)
-        //binding.overTime = kotlin.math.max(adapter?.overTime ?: -1, counterGridAdapter.overTime)
     }
 
     /** カウンタを更新します */
@@ -93,9 +91,8 @@ class EventGridView : FrameLayout {
             counters.add(Counter(periods[i], periods[i + 1], events.count { it.start <= period && it.end > period }, limit?.minimum, limit?.maximum))
         }
         counterGridAdapter.replace(counters, counterGridAdapter.day)
-        // 超過時間を再設定します
+        // 目盛りを再設定します
         scaleListAdapter.setItemsIn(1, 24 + (counterGridAdapter.overTime))
-        //binding.overTime = kotlin.math.max(adapter?.overTime ?: -1, counterGridAdapter.overTime)
     }
 
     /** イベントにクリックリスナを実装します */
@@ -108,8 +105,31 @@ class EventGridView : FrameLayout {
         counterGridAdapter?.onCounterClickListener = onCounterClickListener
     }
 
-    class ScaleListAdapter(private val context: Context) : BaseAdapter() {
+    class ScaleListAdapter(context: Context) : ArrayAdapter<Int>(context, R.layout.list_scale) {
         private var items: List<Int> = emptyList()
+
+        override fun getCount(): Int = items.size
+
+        override fun getItemId(position: Int): Long = 0
+
+        override fun getItem(position: Int): Int = items[position]
+
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+            val view = if (convertView == null) {
+                createView(parent).apply { tag = this }
+            } else {
+                convertView.tag as View
+            }
+            return bindView(view, position)
+        }
+
+        private fun createView(parent: ViewGroup): View {
+            return ListScaleBinding.inflate(LayoutInflater.from(context), parent, false).root
+        }
+
+        private fun bindView(view: View, position: Int): View {
+            return DataBindingUtil.bind<ListScaleBinding>(view)!!.apply { hour = getItem(position) }.root
+        }
 
         /** from-toの間の時間(単位:時間)をItemsに格納します */
         fun setItemsIn(from: Int, to: Int) {
@@ -119,23 +139,6 @@ class EventGridView : FrameLayout {
             }
             items = newItems.toList()
             notifyDataSetChanged()
-        }
-
-        override fun getCount(): Int = items.count()
-
-        override fun getItemId(position: Int): Long = 0
-
-        override fun getItem(position: Int): Int = items[position]
-
-        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-            val view: View
-            if (convertView == null) {
-                view = ListScaleBinding.inflate(LayoutInflater.from(context), parent, false).root
-                view.tag = view
-            } else {
-                view = convertView.tag as View
-            }
-            return DataBindingUtil.bind<ListScaleBinding>(view)!!.apply { hour = getItem(position) }.root
         }
     }
 
