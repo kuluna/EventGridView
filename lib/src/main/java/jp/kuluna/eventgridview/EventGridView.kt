@@ -105,28 +105,31 @@ class EventGridView : FrameLayout {
         counterGridAdapter?.onCounterClickListener = onCounterClickListener
     }
 
+    /** 目盛り一覧のアダプター */
     class ScaleListAdapter(context: Context) : ArrayAdapter<Int>(context, R.layout.view_scale_list) {
         private var items: List<Int> = emptyList()
 
         override fun getCount(): Int = items.size
 
-        override fun getItemId(position: Int): Long = 0
-
         override fun getItem(position: Int): Int = items[position]
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val view = if (convertView == null) {
+                // viewがまだなければ新しく生成します
                 createView(parent).apply { tag = this }
             } else {
+                // 生成済みであればビューを取得します
                 convertView.tag as View
             }
             return bindView(view, position)
         }
 
+        /** viewを生成します */
         private fun createView(parent: ViewGroup): View {
             return ViewScaleListBinding.inflate(LayoutInflater.from(context), parent, false).root
         }
 
+        /** viewにパラメータを設定します */
         private fun bindView(view: View, position: Int): View {
             return DataBindingUtil.bind<ViewScaleListBinding>(view)!!.apply { hour = getItem(position) }.root
         }

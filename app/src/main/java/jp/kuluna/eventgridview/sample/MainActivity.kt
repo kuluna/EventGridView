@@ -52,6 +52,7 @@ class MainActivity : AppCompatActivity() {
             val random = Random().nextInt(24)
             val startedAt = Calendar.getInstance().apply {
                 set(Calendar.HOUR_OF_DAY, random)
+                set(Calendar.MINUTE, 0)
             }.time
             val endedAt = Calendar.getInstance().apply {
                 time = startedAt
@@ -76,9 +77,11 @@ class MainActivity : AppCompatActivity() {
         // Eventのカウンタを表示する
         val countStart = Calendar.getInstance().apply {
             set(Calendar.HOUR_OF_DAY, 10)
+            set(Calendar.MINUTE, 0)
         }.time
         val countEnd = Calendar.getInstance().apply {
             set(Calendar.HOUR_OF_DAY, 14)
+            set(Calendar.MINUTE, 0)
         }.time
         val limits: List<Limit> = listOf(
                 Limit(countStart, countEnd, 3, 6)
