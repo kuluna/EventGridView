@@ -39,7 +39,10 @@ open class CounterGridAdapter(private val context: Context) : RecyclerView.Adapt
     /** ViewHolder全体のCounterViewの配列の格納用 */
     private var counterViewGroup = mutableListOf<List<View>>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CounterGridViewHolder = CounterGridViewHolder(CounterColumnView(context))
+    private var scaleFrom: Int = 0
+    private var scaleTo: Int = 23
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CounterGridViewHolder = CounterGridViewHolder(CounterColumnView(context, scaleFrom))
 
     override fun getItemCount(): Int = 1
 
@@ -62,5 +65,12 @@ open class CounterGridAdapter(private val context: Context) : RecyclerView.Adapt
         this.day = day
 
         notifyDataSetChanged()
+    }
+
+    /** 目盛りの範囲を設定します */
+    internal fun setScale(from: Int, to: Int) {
+        scaleFrom = from
+        scaleTo = to
+        replace(counters, day)
     }
 }

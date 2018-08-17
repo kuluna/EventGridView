@@ -88,6 +88,11 @@ class DraggableEventGridListView : FrameLayout {
         eventGridView.setOnCounterClickListener(onCounterClickListener)
     }
 
+    /** 目盛りの範囲を設定します */
+    fun setScale(from: Int, to: Int) {
+        eventGridView.setScale(from, to)
+    }
+
     private fun load() {
         binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.view_event_list, this, true)
         handler = ScrollHandler(binding.scrollView)

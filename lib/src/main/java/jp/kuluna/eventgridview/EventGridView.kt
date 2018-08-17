@@ -19,8 +19,9 @@ class EventGridView : FrameLayout {
     private var counterGridAdapter: CounterGridAdapter? = null
     private var limits: List<Limit> = emptyList()
     private var scaleListAdapter: ScaleListAdapter
-    var scaleFrom = 0
-    var scaleTo = 23
+    private var scaleFrom = 0
+    private var scaleTo = 23
+
     var adapter: EventGridAdapter?
         get() = binding.eventGridRecyclerView.adapter as? EventGridAdapter
         set(value) {
@@ -43,6 +44,7 @@ class EventGridView : FrameLayout {
     fun showCounter(events: List<Event>, date: Date, limits: List<Limit> = emptyList()) {
         val counterGridAdapter = CounterGridAdapter(context)
         this.counterGridAdapter = counterGridAdapter
+        counterGridAdapter.setScale(scaleFrom, scaleTo)
         binding.counterVisibility = true
         binding.counterGridRecyclerView.adapter = counterGridAdapter
         this.limits = limits
@@ -106,6 +108,15 @@ class EventGridView : FrameLayout {
     /** カウンタにクリックリスナを実装します */
     fun setOnCounterClickListener(onCounterClickListener: ((Counter) -> Unit)?) {
         counterGridAdapter?.onCounterClickListener = onCounterClickListener
+    }
+
+    /** 目盛りの範囲を設定します */
+    fun setScale(from: Int, to: Int) {
+        scaleFrom = from
+        scaleTo = to
+        scaleListAdapter.setItemsIn(scaleFrom + 1, 24 + (counterGridAdapter?.overTime ?: -1))
+        adapter?.setScale(from, to)
+        counterGridAdapter?.setScale(from, to)
     }
 
     /** 目盛り一覧のアダプター */

@@ -27,6 +27,9 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
     /** Event伸縮のイベント */
     var onEventStretchListener: ((MotionEvent) -> Unit)? = null
 
+    private var scaleFrom: Int = 0
+    private var scaleTo: Int = 23
+
     private var events = emptyList<Event>()
     private var group = emptyList<Pair<Int, List<Event>>>()
     private var day = Date()
@@ -52,7 +55,7 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
     /** ViewHolder全体のEventViewの配列の格納用 */
     private var eventViewGroup = mutableListOf<List<View>>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventGridViewHolder = EventGridViewHolder(EventColumnView(context, widthIsMatchParent))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventGridViewHolder = EventGridViewHolder(EventColumnView(context, widthIsMatchParent, scaleFrom))
 
     override fun getItemCount(): Int = group.size
 
@@ -110,6 +113,13 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
                 }
             }
         }
+    }
+
+    /** 目盛りの範囲を設定します */
+    internal fun setScale(from: Int, to: Int) {
+        scaleFrom = from
+        scaleTo = to
+        replace(events, day)
     }
 
     /**

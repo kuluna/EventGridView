@@ -14,7 +14,7 @@ import java.util.*
  * @param context Android Context
  */
 @SuppressLint("ViewConstructor")
-open class CounterColumnView(context: Context) : FrameLayout(context) {
+open class CounterColumnView(context: Context, var scaleFrom: Int) : FrameLayout(context) {
     /** Counterのクリックイベント */
     var onCounterClickListener: ((Counter) -> Unit)? = null
     /** ディスプレイの密度取得 (この値にdpを掛けるとpxになる) */
@@ -26,6 +26,9 @@ open class CounterColumnView(context: Context) : FrameLayout(context) {
     private var counters: MutableList<Counter> = mutableListOf()
     /** EventViewの格納用 */
     var counterViews = mutableListOf<View>()
+    /** 目盛りの開始時点(Dp) */
+    private val dpOfScaleFrom
+        get() = (scaleFrom * 40 * density).toInt()
 
     init {
         layoutParams = FrameLayout.LayoutParams((widthDp * density).toInt(), FrameLayout.LayoutParams.MATCH_PARENT).apply {
@@ -80,7 +83,7 @@ open class CounterColumnView(context: Context) : FrameLayout(context) {
 
             // マージン指定
             val marginParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, (y * density).toInt()).apply {
-                topMargin = (fromY * density).toInt()
+                topMargin = (fromY * density).toInt() - dpOfScaleFrom
             }
 
             binding.counterFrame.setOnClickListener {

@@ -23,7 +23,7 @@ import kotlin.math.roundToInt
  * @param widthIsMatchParent true に設定すると width が match_parent に
  */
 @SuppressLint("ViewConstructor")
-open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : FrameLayout(context) {
+open class EventColumnView(context: Context, widthIsMatchParent: Boolean, private val scaleFrom: Int) : FrameLayout(context) {
     /** Eventのクリックイベント */
     var onEventClickListener: ((Event) -> Unit)? = null
     /** Eventのドラッグイベント */
@@ -33,7 +33,7 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
     /** Eventをドラッグしたことによる変更イベント */
     var onEventChangedListener: ((Event, Event, hideAll: Boolean) -> Unit)? = null
 
-    /** ディスプレイの密度取得 (この値にdpを掛けるとpxになる) */
+    /** ディスプレイの密度取得 */
     private val density = context.resources.displayMetrics.density
     /** RecyclerViewにおけるこのViewの現在のPosition */
     private var layoutPosition = 0
@@ -50,12 +50,16 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
     private var maxEventHeight = 0
     /** Eventのトップの最大値 */
     private var maxEventTop = (TimeParams(24, 0).fromY - 10) * density// 10dp単位なので-10
+        get() = field - dpOfScaleFrom
     /** EventViewの格納用 */
     var eventViews = mutableListOf<View>()
     /** 調整前のEvent */
     private var oldEvent: Event? = null
     /** Eventの時間 */
     private var elapsedTime: TimeParams? = null
+    /** 目盛りの開始時点(Dp) */
+    private val dpOfScaleFrom
+        get() = (scaleFrom * 40 * density).toInt()
 
     init {
         val width = if (widthIsMatchParent) {
@@ -91,15 +95,16 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
                     }
 
                     // ドロップ位置のマージンで再設定
-                    val newStart = TimeParams.from(dropStartY, density)
+                    val newStart = TimeParams.from(dropStartY + dpOfScaleFrom, density)
                     eventBinding.root.layoutParams = (eventBinding.root.layoutParams as FrameLayout.LayoutParams).apply {
-                        val newMargin = (newStart.fromY * density).toInt()
+                        val newMargin = (newStart.fromY * density).toInt() - dpOfScaleFrom
                         topMargin = newMargin
                     }
 
                     val startCal = Calendar.getInstance().apply { time = event.start }
                     startCal.set(Calendar.HOUR_OF_DAY, newStart.hour)
                     startCal.set(Calendar.MINUTE, newStart.min)
+
                     val distance = startCal.time.time - event.start.time
 
                     // 開始時刻を再設定
@@ -177,7 +182,7 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
 
             // マージン指定
             val marginParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, (y * density).toInt()).apply {
-                topMargin = (fromY * density).toInt()
+                topMargin = (fromY * density).toInt() - dpOfScaleFrom
             }
 
             if (event.draggable) {
