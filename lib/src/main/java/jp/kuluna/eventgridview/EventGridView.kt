@@ -19,12 +19,15 @@ class EventGridView : FrameLayout {
     private var counterGridAdapter: CounterGridAdapter? = null
     private var limits: List<Limit> = emptyList()
     private var scaleListAdapter: ScaleListAdapter
+    var scaleFrom = 0
+    var scaleTo = 23
     var adapter: EventGridAdapter?
         get() = binding.eventGridRecyclerView.adapter as? EventGridAdapter
         set(value) {
             binding.eventGridRecyclerView.adapter = value
             value?.onScaleRefreshListener = {
-                scaleListAdapter.setItemsIn(1, 24 + (counterGridAdapter?.overTime ?: -1))
+                scaleListAdapter.setItemsIn(scaleFrom + 1, 24 + (counterGridAdapter?.overTime
+                        ?: -1))
                 if (binding.counterVisibility) {
                     refreshCounter(value?.getEvents() ?: emptyList())
                 }
@@ -65,7 +68,7 @@ class EventGridView : FrameLayout {
         }
         counterGridAdapter.replace(counters, date)
         // 目盛りを再設定します
-        scaleListAdapter.setItemsIn(1, 24 + counterGridAdapter.overTime)
+        scaleListAdapter.setItemsIn(scaleFrom + 1, 24 + counterGridAdapter.overTime)
     }
 
     /** カウンタを更新します */
@@ -92,7 +95,7 @@ class EventGridView : FrameLayout {
         }
         counterGridAdapter.replace(counters, counterGridAdapter.day)
         // 目盛りを再設定します
-        scaleListAdapter.setItemsIn(1, 24 + (counterGridAdapter.overTime))
+        scaleListAdapter.setItemsIn(scaleFrom + 1, 24 + (counterGridAdapter.overTime))
     }
 
     /** イベントにクリックリスナを実装します */
