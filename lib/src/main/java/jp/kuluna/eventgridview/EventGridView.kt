@@ -10,8 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.FrameLayout
-import jp.kuluna.eventgridview.databinding.ListScaleBinding
 import jp.kuluna.eventgridview.databinding.ViewEventGridBinding
+import jp.kuluna.eventgridview.databinding.ViewScaleListBinding
 import java.util.*
 
 class EventGridView : FrameLayout {
@@ -105,7 +105,7 @@ class EventGridView : FrameLayout {
         counterGridAdapter?.onCounterClickListener = onCounterClickListener
     }
 
-    class ScaleListAdapter(context: Context) : ArrayAdapter<Int>(context, R.layout.list_scale) {
+    class ScaleListAdapter(context: Context) : ArrayAdapter<Int>(context, R.layout.view_scale_list) {
         private var items: List<Int> = emptyList()
 
         override fun getCount(): Int = items.size
@@ -124,11 +124,11 @@ class EventGridView : FrameLayout {
         }
 
         private fun createView(parent: ViewGroup): View {
-            return ListScaleBinding.inflate(LayoutInflater.from(context), parent, false).root
+            return ViewScaleListBinding.inflate(LayoutInflater.from(context), parent, false).root
         }
 
         private fun bindView(view: View, position: Int): View {
-            return DataBindingUtil.bind<ListScaleBinding>(view)!!.apply { hour = getItem(position) }.root
+            return DataBindingUtil.bind<ViewScaleListBinding>(view)!!.apply { hour = getItem(position) }.root
         }
 
         /** from-toの間の時間(単位:時間)をItemsに格納します */

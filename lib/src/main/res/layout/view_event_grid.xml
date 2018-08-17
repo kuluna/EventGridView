@@ -32,7 +32,8 @@
                 android:id="@+id/scale_list_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:listitem="@layout/list_scale"/>
+                android:divider="@null"
+                tools:listitem="@layout/view_scale_list"/>
 
             <Space
                 android:layout_width="match_parent"
