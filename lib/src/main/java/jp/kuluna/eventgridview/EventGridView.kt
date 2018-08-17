@@ -6,20 +6,25 @@ import android.support.v7.widget.LinearLayoutManager
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.FrameLayout
 import jp.kuluna.eventgridview.databinding.ViewEventGridBinding
+import jp.kuluna.eventgridview.databinding.ViewScaleListBinding
 import java.util.*
 
 class EventGridView : FrameLayout {
     private val binding: ViewEventGridBinding
     private var counterGridAdapter: CounterGridAdapter? = null
     private var limits: List<Limit> = emptyList()
+    private var scaleListAdapter: ScaleListAdapter
     var adapter: EventGridAdapter?
         get() = binding.eventGridRecyclerView.adapter as? EventGridAdapter
         set(value) {
             binding.eventGridRecyclerView.adapter = value
             value?.onScaleRefreshListener = {
-                binding.overTime = kotlin.math.max(it, counterGridAdapter?.overTime ?: -1)
+                scaleListAdapter.setItemsIn(1, 24 + (counterGridAdapter?.overTime ?: -1))
                 if (binding.counterVisibility) {
                     refreshCounter(value?.getEvents() ?: emptyList())
                 }
@@ -59,8 +64,8 @@ class EventGridView : FrameLayout {
             counters.add(Counter(periods[i], periods[i + 1], events.count { it.start <= period && it.end > period }, limit?.minimum, limit?.maximum))
         }
         counterGridAdapter.replace(counters, date)
-        // 超過時間を再設定します
-        binding.overTime = kotlin.math.max(adapter?.overTime ?: -1, counterGridAdapter.overTime)
+        // 目盛りを再設定します
+        scaleListAdapter.setItemsIn(1, 24 + counterGridAdapter.overTime)
     }
 
     /** カウンタを更新します */
@@ -86,8 +91,8 @@ class EventGridView : FrameLayout {
             counters.add(Counter(periods[i], periods[i + 1], events.count { it.start <= period && it.end > period }, limit?.minimum, limit?.maximum))
         }
         counterGridAdapter.replace(counters, counterGridAdapter.day)
-        // 超過時間を再設定します
-        binding.overTime = kotlin.math.max(adapter?.overTime ?: -1, counterGridAdapter.overTime)
+        // 目盛りを再設定します
+        scaleListAdapter.setItemsIn(1, 24 + (counterGridAdapter.overTime))
     }
 
     /** イベントにクリックリスナを実装します */
@@ -98,6 +103,46 @@ class EventGridView : FrameLayout {
     /** カウンタにクリックリスナを実装します */
     fun setOnCounterClickListener(onCounterClickListener: ((Counter) -> Unit)?) {
         counterGridAdapter?.onCounterClickListener = onCounterClickListener
+    }
+
+    /** 目盛り一覧のアダプター */
+    class ScaleListAdapter(context: Context) : ArrayAdapter<Int>(context, R.layout.view_scale_list) {
+        private var items: List<Int> = emptyList()
+
+        override fun getCount(): Int = items.size
+
+        override fun getItem(position: Int): Int = items[position]
+
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+            val view = if (convertView == null) {
+                // viewがまだなければ新しく生成します
+                createView(parent).apply { tag = this }
+            } else {
+                // 生成済みであればビューを取得します
+                convertView.tag as View
+            }
+            return bindView(view, position)
+        }
+
+        /** viewを生成します */
+        private fun createView(parent: ViewGroup): View {
+            return ViewScaleListBinding.inflate(LayoutInflater.from(context), parent, false).root
+        }
+
+        /** viewにパラメータを設定します */
+        private fun bindView(view: View, position: Int): View {
+            return DataBindingUtil.bind<ViewScaleListBinding>(view)!!.apply { hour = getItem(position) }.root
+        }
+
+        /** from-toの間の時間(単位:時間)をItemsに格納します */
+        fun setItemsIn(from: Int, to: Int) {
+            val newItems = mutableListOf<Int>()
+            for (i in from..to) {
+                newItems.add(i)
+            }
+            items = newItems.toList()
+            notifyDataSetChanged()
+        }
     }
 
     constructor(context: Context) : this(context, null)
@@ -118,5 +163,7 @@ class EventGridView : FrameLayout {
         }
 
         binding.counterVisibility = false
+        scaleListAdapter = ScaleListAdapter(context)
+        binding.scaleListView.adapter = scaleListAdapter
     }
 }
