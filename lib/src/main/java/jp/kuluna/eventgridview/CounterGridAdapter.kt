@@ -20,18 +20,20 @@ open class CounterGridAdapter(private val context: Context) : RecyclerView.Adapt
         get() = counters.maxBy { it.end }?.end
     /** 基準日 */
     var day = Date()
-    /** 24時間を超えた時間 */
-    val overTime: Int
+    /** 時間の最大値 */
+    val maxTime: Int
         get() {
             val selectCal = Calendar.getInstance()
             selectCal.time = day
             val lastEndCal = Calendar.getInstance()
             lastEndCal.time = lastEnd ?: day
 
-            return if (selectCal.get(Calendar.DATE) != lastEndCal.get(Calendar.DATE)) {//日跨ぎ有り
-                lastEndCal.get(Calendar.HOUR_OF_DAY)
-            } else {//日跨ぎ無し
-                -1
+            return if (selectCal.get(Calendar.DATE) != lastEndCal.get(Calendar.DATE)) {
+                // 日跨ぎ有りなら+24時間と、端数を考慮して+1時間
+                lastEndCal.get(Calendar.HOUR_OF_DAY) + 24 + 1
+            } else {
+                // 日跨ぎなしなら端数を考慮して+1時間
+                lastEndCal.get(Calendar.HOUR_OF_DAY) + 1
             }
         }
     /** CounterViewColumnで生成されたのCounterView格納用 */
@@ -42,7 +44,7 @@ open class CounterGridAdapter(private val context: Context) : RecyclerView.Adapt
     private var scaleFrom: Int = 0
     private var scaleTo: Int = 23
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CounterGridViewHolder = CounterGridViewHolder(CounterColumnView(context, scaleFrom))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CounterGridViewHolder = CounterGridViewHolder(CounterColumnView(context, scaleFrom, scaleTo))
 
     override fun getItemCount(): Int = 1
 

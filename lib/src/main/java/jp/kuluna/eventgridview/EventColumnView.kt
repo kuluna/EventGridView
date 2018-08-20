@@ -14,6 +14,7 @@ import android.view.View
 import android.view.View.DragShadowBuilder
 import android.widget.FrameLayout
 import jp.kuluna.eventgridview.databinding.ViewEventBinding
+import org.apache.commons.lang.time.DateUtils
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -23,7 +24,7 @@ import kotlin.math.roundToInt
  * @param widthIsMatchParent true に設定すると width が match_parent に
  */
 @SuppressLint("ViewConstructor")
-open class EventColumnView(context: Context, widthIsMatchParent: Boolean, private val scaleFrom: Int) : FrameLayout(context) {
+open class EventColumnView(context: Context, widthIsMatchParent: Boolean, private val scaleFrom: Int, private val scaleTo: Int) : FrameLayout(context) {
     /** Eventのクリックイベント */
     var onEventClickListener: ((Event) -> Unit)? = null
     /** Eventのドラッグイベント */
@@ -60,6 +61,9 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean, privat
     /** 目盛りの開始時点(Dp) */
     private val dpOfScaleFrom
         get() = (scaleFrom * 40 * density).toInt()
+    /** 目盛りの終了時点(Dp) */
+    private val dpOfScaleTo
+        get() = (scaleTo * 40 * density).toInt()
 
     init {
         val width = if (widthIsMatchParent) {
@@ -94,12 +98,9 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean, privat
                         dropStartY = maxEventTop
                     }
 
+
                     // ドロップ位置のマージンで再設定
                     val newStart = TimeParams.from(dropStartY + dpOfScaleFrom, density)
-                    eventBinding.root.layoutParams = (eventBinding.root.layoutParams as FrameLayout.LayoutParams).apply {
-                        val newMargin = (newStart.fromY * density).toInt() - dpOfScaleFrom
-                        topMargin = newMargin
-                    }
 
                     val startCal = Calendar.getInstance().apply { time = event.start }
                     startCal.set(Calendar.HOUR_OF_DAY, newStart.hour)
@@ -122,6 +123,13 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean, privat
                     // 変更を通知
                     onEventChangedListener?.invoke(Event.from(intent.getBundleExtra("event")), event, true)
 
+                    // マージン指定
+                    eventBinding.root.layoutParams = (eventBinding.root.layoutParams as FrameLayout.LayoutParams).apply {
+                        val newMargin = (newStart.fromY * density).toInt() - dpOfScaleFrom
+                        topMargin = newMargin
+                        bottomMargin = (getOverTime(event.start, event.end) * 40 * density).toInt()
+                    }
+
                     // 編集表示用のEventを書き換えます
                     eventBinding.root.setOnClickListener {
                         onEventClickListener?.invoke(event)
@@ -130,6 +138,7 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean, privat
                     // Eventの長さを調節するボタンを表示する
                     eventBinding.topAdjust.visibility = View.VISIBLE
                     eventBinding.bottomAdjust.visibility = View.VISIBLE
+
                     true
                 }
                 else -> true
@@ -179,10 +188,10 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean, privat
                 }
             }
 
-
             // マージン指定
             val marginParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, (y * density).toInt()).apply {
                 topMargin = (fromY * density).toInt() - dpOfScaleFrom
+                bottomMargin = (getOverTime(event.start, event.end) * 40 * density).toInt()
             }
 
             if (event.draggable) {
@@ -308,6 +317,19 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean, privat
         }
     }
 
+    /**
+     * 超過した時間を取得します
+     * @param day 基準となる日付
+     * @param end イベントの終了時間
+     */
+    private fun getOverTime(day: Date, end: Date): Int {
+        val cal = Calendar.getInstance().apply {
+            time = end
+        }
+        val overTime = scaleTo - (cal.get(Calendar.HOUR_OF_DAY) + 1 + if (DateUtils.isSameDay(cal.time, day)) 0 else 24)
+        return if (overTime < 0) overTime else 0
+    }
+
     private fun getParams(date: Date, addDays: Int = 0): TimeParams {
         val cal = Calendar.getInstance().apply { time = date }
         return TimeParams(cal[Calendar.HOUR_OF_DAY] + (addDays * 24), cal[Calendar.MINUTE])
@@ -327,9 +349,9 @@ class EventDragShadowBuilder(view: View, private val adjustStartTapY: Float) : D
 
     override fun onProvideShadowMetrics(shadowSize: Point, shadowTouchPoint: Point) {
         val margin = 20
-        //影の分の領域を含めたサイズを設定
+//影の分の領域を含めたサイズを設定
         shadowSize.set(view.width + margin, view.height + margin)
-        //viewの中央に設定
+//viewの中央に設定
         shadowTouchPoint.set(view.width / 2, adjustStartTapY.toInt())
     }
 }

@@ -20,15 +20,19 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         adapter = EventGridAdapter(this)
-        binding.eventGridView.adapter = adapter
+        binding.eventGridView.apply {
+            adapter = this@MainActivity.adapter
+            // 表示範囲を固定する場合は下記のように指定してください
+            setScale(9, 26)
+            // 各イベントは下記のように実装してください
+            setOnEventClickListener {
+                Log.i("MainActivity", it.toString())
+            }
+            setOnCounterClickListener {
+                Log.i("MainActivity", it.toString())
+            }
+        }
         showEvents()
-        // 各イベントは下記のように実装してください
-        binding.eventGridView.setOnEventClickListener {
-            Log.i("MainActivity", it.toString())
-        }
-        binding.eventGridView.setOnCounterClickListener {
-            Log.i("MainActivity", it.toString())
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

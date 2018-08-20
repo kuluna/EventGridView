@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import jp.kuluna.eventgridview.databinding.ViewCounterBinding
+import org.apache.commons.lang.time.DateUtils
 import java.util.*
 
 /**
@@ -14,7 +15,7 @@ import java.util.*
  * @param context Android Context
  */
 @SuppressLint("ViewConstructor")
-open class CounterColumnView(context: Context, var scaleFrom: Int) : FrameLayout(context) {
+open class CounterColumnView(context: Context, var scaleFrom: Int, var scaleTo: Int) : FrameLayout(context) {
     /** Counterのクリックイベント */
     var onCounterClickListener: ((Counter) -> Unit)? = null
     /** ディスプレイの密度取得 (この値にdpを掛けるとpxになる) */
@@ -84,6 +85,7 @@ open class CounterColumnView(context: Context, var scaleFrom: Int) : FrameLayout
             // マージン指定
             val marginParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, (y * density).toInt()).apply {
                 topMargin = (fromY * density).toInt() - dpOfScaleFrom
+                bottomMargin = (getOverTime(day, counter.end) * 40 * density).toInt()
             }
 
             binding.counterFrame.setOnClickListener {
@@ -91,6 +93,19 @@ open class CounterColumnView(context: Context, var scaleFrom: Int) : FrameLayout
             }
             addView(binding.root, FrameLayout.LayoutParams(marginParams))
         }
+    }
+
+    /**
+     * 超過した時間を取得します
+     * @param day 基準となる日付
+     * @param end イベントの終了時間
+     */
+    private fun getOverTime(day: Date, end: Date): Int {
+        val cal = Calendar.getInstance().apply {
+            time = end
+        }
+        val overTime = scaleTo - (cal.get(Calendar.HOUR_OF_DAY) + 1 + if (DateUtils.isSameDay(cal.time, day)) 0 else 24)
+        return if (overTime < 0) overTime else 0
     }
 
     private fun getParams(date: Date, addDays: Int = 0): TimeParams {
