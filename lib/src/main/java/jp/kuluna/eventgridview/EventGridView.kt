@@ -13,7 +13,6 @@ import android.widget.FrameLayout
 import jp.kuluna.eventgridview.databinding.ViewEventGridBinding
 import jp.kuluna.eventgridview.databinding.ViewScaleListBinding
 import java.util.*
-import kotlin.math.max
 
 class EventGridView : FrameLayout {
     private val binding: ViewEventGridBinding
@@ -28,7 +27,7 @@ class EventGridView : FrameLayout {
     }
 
     private fun getScaleTo(): Int {
-        return scaleTo ?: max((counterGridAdapter?.maxTime ?: 24), (adapter?.maxTime ?: 24))
+        return scaleTo ?: maxOf((counterGridAdapter?.maxTime ?: 24), (adapter?.maxTime ?: 24), 24)
     }
 
     var adapter: EventGridAdapter?
@@ -36,7 +35,7 @@ class EventGridView : FrameLayout {
         set(value) {
             binding.eventGridRecyclerView.adapter = value
             value?.onScaleRefreshListener = { _, _ ->
-                scaleListAdapter.setItemsIn(getScaleFrom(), getScaleTo())
+                scaleListAdapter.setItemsIn(getScaleFrom() + 1, getScaleTo() - 1)
                 if (binding.counterVisibility) {
                     refreshCounter(value?.getEvents() ?: emptyList())
                 }
@@ -118,7 +117,7 @@ class EventGridView : FrameLayout {
         counterGridAdapter?.onCounterClickListener = onCounterClickListener
     }
 
-    /** 目盛りの範囲を設定します */
+    /** 目盛りの範囲を設定します(データに合わせる場合はnull) */
     fun setScale(from: Int?, to: Int?) {
         scaleFrom = from
         scaleTo = to

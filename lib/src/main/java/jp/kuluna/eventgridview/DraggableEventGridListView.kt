@@ -88,8 +88,8 @@ class DraggableEventGridListView : FrameLayout {
         eventGridView.setOnCounterClickListener(onCounterClickListener)
     }
 
-    /** 目盛りの範囲を設定します */
-    fun setScale(from: Int, to: Int) {
+    /** 目盛りの範囲を設定します(データに合わせる場合はnull) */
+    fun setScale(from: Int?, to: Int?) {
         eventGridView.setScale(from, to)
     }
 
