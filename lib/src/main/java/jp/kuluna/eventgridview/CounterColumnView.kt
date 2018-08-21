@@ -29,7 +29,7 @@ open class CounterColumnView(context: Context, var scaleFrom: Int, var scaleTo: 
     var counterViews = mutableListOf<View>()
     /** 目盛りの開始時点(Dp) */
     private val dpOfScaleFrom
-        get() = (scaleFrom * 40 * density).toInt()
+        get() = ((scaleFrom * 40 - 20) * density).toInt()
 
     init {
         layoutParams = FrameLayout.LayoutParams((widthDp * density).toInt(), FrameLayout.LayoutParams.MATCH_PARENT).apply {

@@ -35,6 +35,8 @@ class EventGridView : FrameLayout {
         set(value) {
             binding.eventGridRecyclerView.adapter = value
             value?.onScaleRefreshListener = { _, _ ->
+                binding.scaleFrom = getScaleFrom()
+                binding.scaleTo = getScaleTo()
                 scaleListAdapter.setItemsIn(getScaleFrom() + 1, getScaleTo() - 1)
                 if (binding.counterVisibility) {
                     refreshCounter(value?.getEvents() ?: emptyList())
@@ -124,6 +126,8 @@ class EventGridView : FrameLayout {
         scaleListAdapter.setItemsIn(getScaleFrom() + 1, getScaleTo() - 1)
         adapter?.setScale(getScaleFrom(), getScaleTo())
         counterGridAdapter?.setScale(getScaleFrom(), getScaleTo())
+        binding.scaleFrom = getScaleFrom()
+        binding.scaleTo = getScaleTo()
     }
 
     /** 目盛り一覧のアダプター */

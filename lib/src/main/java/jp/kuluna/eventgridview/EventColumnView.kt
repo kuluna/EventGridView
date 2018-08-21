@@ -60,7 +60,7 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean, privat
     private var elapsedTime: TimeParams? = null
     /** 目盛りの開始時点(Dp) */
     private val dpOfScaleFrom
-        get() = (scaleFrom * 40 * density).toInt()
+        get() = ((scaleFrom * 40 - 20) * density).toInt()
     /** 目盛りの終了時点(Dp) */
     private val dpOfScaleTo
         get() = (scaleTo * 40 * density).toInt()

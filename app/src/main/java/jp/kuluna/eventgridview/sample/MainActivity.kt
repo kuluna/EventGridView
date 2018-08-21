@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
         binding.eventGridView.apply {
             adapter = this@MainActivity.adapter
             // 表示範囲を固定する場合は下記のように指定してください
-            setScale(9, 26)
+            setScale(9, 20)
             // 各イベントは下記のように実装してください
             setOnEventClickListener {
                 Log.i("MainActivity", it.toString())
@@ -88,6 +88,6 @@ class MainActivity : AppCompatActivity() {
                 Limit(countStart, countEnd, 3, 6)
         )
 
-        binding.eventGridView.showCounter(events, Date(), limits)
+       binding.eventGridView.showCounter(events, Date(), limits)
     }
 }
