@@ -7,7 +7,11 @@
         <import type="android.view.View" />
 
         <variable
-            name="overTime"
+            name="scaleFrom"
+            type="int" />
+
+        <variable
+            name="scaleTo"
             type="int" />
 
         <variable
@@ -22,29 +26,25 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/a_scale"
+            android:paddingTop="@dimen/a_scale">
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="20dp" />
 
             <jp.kuluna.eventgridview.NonScrollListView
                 android:id="@+id/scale_list_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:divider="@null"
-                tools:listitem="@layout/view_scale_list"/>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="20dp" />
+                tools:listitem="@layout/view_scale_list" />
 
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/grid_views"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="40dp"
+            android:layout_marginStart="@dimen/a_scale"
             android:orientation="horizontal">
 
             <jp.kuluna.eventgridview.TouchableRecyclerView
@@ -63,6 +63,54 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:nestedScrollingEnabled="false" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/a_scale"
+            android:layout_marginTop="0dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="8dp"
+                android:text="@{String.format(`%02d:00`, scaleFrom)}"
+                android:textColor="#666"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_gravity="center"
+                android:background="#666" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/a_scale"
+            android:layout_gravity="bottom"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="8dp"
+                android:text="@{String.format(`%02d:00`, scaleTo)}"
+                android:textColor="#666"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_gravity="center"
+                android:background="#666" />
         </LinearLayout>
     </FrameLayout>
 </layout>

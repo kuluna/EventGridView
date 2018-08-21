@@ -14,6 +14,7 @@ import android.view.View
 import android.view.View.DragShadowBuilder
 import android.widget.FrameLayout
 import jp.kuluna.eventgridview.databinding.ViewEventBinding
+import org.apache.commons.lang.time.DateUtils
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -21,9 +22,11 @@ import kotlin.math.roundToInt
  * イベントを1列内に表示するためのView
  * @param context Android Context
  * @param widthIsMatchParent true に設定すると width が match_parent に
+ * @param scaleFrom 目盛りの開始時刻
+ * @param scaleTo 目盛りの終了時刻
  */
 @SuppressLint("ViewConstructor")
-open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : FrameLayout(context) {
+open class EventColumnView(context: Context, widthIsMatchParent: Boolean, private val scaleFrom: Int, private val scaleTo: Int) : FrameLayout(context) {
     /** Eventのクリックイベント */
     var onEventClickListener: ((Event) -> Unit)? = null
     /** Eventのドラッグイベント */
@@ -33,7 +36,7 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
     /** Eventをドラッグしたことによる変更イベント */
     var onEventChangedListener: ((Event, Event, hideAll: Boolean) -> Unit)? = null
 
-    /** ディスプレイの密度取得 (この値にdpを掛けるとpxになる) */
+    /** ディスプレイの密度取得 */
     private val density = context.resources.displayMetrics.density
     /** RecyclerViewにおけるこのViewの現在のPosition */
     private var layoutPosition = 0
@@ -44,18 +47,24 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
     private var adjustStartTapY = 0f
     /** Eventの横幅(dp) */
     private val widthDp = 48
+    /** 目盛り一つの幅 */
+    private val aScale: Int = context.resources.getDimensionPixelSize(R.dimen.a_scale)
     /** Eventの最低の高さ */
     private var minEventHeight = convertPxToRoundedDp(90.0F) // 固定値にしてあります
     /** Eventの高さ最大値 */
     private var maxEventHeight = 0
     /** Eventのトップの最大値 */
     private var maxEventTop = (TimeParams(24, 0).fromY - 10) * density// 10dp単位なので-10
+        get() = field - dpOfScaleFrom
     /** EventViewの格納用 */
     var eventViews = mutableListOf<View>()
     /** 調整前のEvent */
     private var oldEvent: Event? = null
     /** Eventの時間 */
     private var elapsedTime: TimeParams? = null
+    /** 目盛りの開始時点(Dp) */
+    private val dpOfScaleFrom
+        get() = (aScale * (scaleFrom - 0.5)).toInt()
 
     init {
         val width = if (widthIsMatchParent) {
@@ -90,16 +99,14 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
                         dropStartY = maxEventTop
                     }
 
+
                     // ドロップ位置のマージンで再設定
-                    val newStart = TimeParams.from(dropStartY, density)
-                    eventBinding.root.layoutParams = (eventBinding.root.layoutParams as FrameLayout.LayoutParams).apply {
-                        val newMargin = (newStart.fromY * density).toInt()
-                        topMargin = newMargin
-                    }
+                    val newStart = TimeParams.from(dropStartY + dpOfScaleFrom, density)
 
                     val startCal = Calendar.getInstance().apply { time = event.start }
                     startCal.set(Calendar.HOUR_OF_DAY, newStart.hour)
                     startCal.set(Calendar.MINUTE, newStart.min)
+
                     val distance = startCal.time.time - event.start.time
 
                     // 開始時刻を再設定
@@ -117,6 +124,13 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
                     // 変更を通知
                     onEventChangedListener?.invoke(Event.from(intent.getBundleExtra("event")), event, true)
 
+                    // マージン指定
+                    eventBinding.root.layoutParams = (eventBinding.root.layoutParams as FrameLayout.LayoutParams).apply {
+                        val newMargin = (newStart.fromY * density).toInt() - dpOfScaleFrom
+                        topMargin = newMargin
+                        bottomMargin = getOverTime(event.start, event.end) * aScale
+                    }
+
                     // 編集表示用のEventを書き換えます
                     eventBinding.root.setOnClickListener {
                         onEventClickListener?.invoke(event)
@@ -125,6 +139,7 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
                     // Eventの長さを調節するボタンを表示する
                     eventBinding.topAdjust.visibility = View.VISIBLE
                     eventBinding.bottomAdjust.visibility = View.VISIBLE
+
                     true
                 }
                 else -> true
@@ -174,10 +189,10 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
                 }
             }
 
-
             // マージン指定
             val marginParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, (y * density).toInt()).apply {
-                topMargin = (fromY * density).toInt()
+                topMargin = (fromY * density).toInt() - dpOfScaleFrom
+                bottomMargin = getOverTime(event.start, event.end) * aScale
             }
 
             if (event.draggable) {
@@ -303,6 +318,19 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
         }
     }
 
+    /**
+     * 超過した時間を取得します
+     * @param day 基準となる日付
+     * @param end イベントの終了時間
+     */
+    private fun getOverTime(day: Date, end: Date): Int {
+        val cal = Calendar.getInstance().apply {
+            time = end
+        }
+        val overTime = scaleTo - (cal.get(Calendar.HOUR_OF_DAY) + 1 + if (DateUtils.isSameDay(cal.time, day)) 0 else 24)
+        return if (overTime < 0) overTime else 0
+    }
+
     private fun getParams(date: Date, addDays: Int = 0): TimeParams {
         val cal = Calendar.getInstance().apply { time = date }
         return TimeParams(cal[Calendar.HOUR_OF_DAY] + (addDays * 24), cal[Calendar.MINUTE])
@@ -322,9 +350,9 @@ class EventDragShadowBuilder(view: View, private val adjustStartTapY: Float) : D
 
     override fun onProvideShadowMetrics(shadowSize: Point, shadowTouchPoint: Point) {
         val margin = 20
-        //影の分の領域を含めたサイズを設定
+//影の分の領域を含めたサイズを設定
         shadowSize.set(view.width + margin, view.height + margin)
-        //viewの中央に設定
+//viewの中央に設定
         shadowTouchPoint.set(view.width / 2, adjustStartTapY.toInt())
     }
 }

@@ -18,33 +18,51 @@ import java.util.*
 open class EventGridAdapter(private val context: Context, private val widthIsMatchParent: Boolean = false) : RecyclerView.Adapter<EventGridViewHolder>() {
     /** Eventのクリックイベント */
     var onEventClickListener: ((Event) -> Unit)? = null
-    /** Eventをドラッグしたことによる変更イベント */
+    /** Eventの変更イベント */
     var onEventChangedListener: ((Event, Event) -> Unit)? = null
     /** 目盛が変わったことによる変更イベント */
-    var onScaleRefreshListener: ((Int) -> Unit)? = null
+    var onScaleRefreshListener: ((Int, Int) -> Unit)? = null
     /** ドラッグのイベント */
     var onEventDragListener: ((DragEvent) -> Unit)? = null
     /** Event伸縮のイベント */
     var onEventStretchListener: ((MotionEvent) -> Unit)? = null
 
+    private var scaleFrom: Int = 0
+    private var scaleTo: Int = 23
+
     private var events = emptyList<Event>()
     private var group = emptyList<Pair<Int, List<Event>>>()
     private var day = Date()
+    /** 最初の開始時刻 */
+    private val firstStart
+        get() = events.minBy { it.start }?.start
     /** 最後の終了時刻 */
     private val lastEnd
         get() = events.maxBy { it.end }?.end
-    /** 24時間を超えた時間 */
-    val overTime: Int
+    /** 最小の時間(単位:時間) */
+    val minTime: Int
+        get() {
+            val selectCal = Calendar.getInstance()
+            selectCal.time = day
+            val firstStartCal = Calendar.getInstance()
+            firstStartCal.time = firstStart ?: day
+
+            return firstStartCal.get(Calendar.HOUR_OF_DAY)
+        }
+    /** 最大の時間(単位:時間) */
+    val maxTime: Int
         get() {
             val selectCal = Calendar.getInstance()
             selectCal.time = day
             val lastEndCal = Calendar.getInstance()
             lastEndCal.time = lastEnd ?: day
 
-            return if (selectCal.get(Calendar.DATE) != lastEndCal.get(Calendar.DATE)) {//日跨ぎ有り
-                lastEndCal.get(Calendar.HOUR_OF_DAY)
-            } else {//日跨ぎ無し
-                -1
+            return if (selectCal.get(Calendar.DATE) != lastEndCal.get(Calendar.DATE)) {
+                // 日跨ぎ有りなら+24時間と、端数を考慮して+1時間
+                lastEndCal.get(Calendar.HOUR_OF_DAY) + 24 + 1
+            } else {
+                // 日跨ぎなしなら端数を考慮して+1時間
+                lastEndCal.get(Calendar.HOUR_OF_DAY) + 1
             }
         }
     /** EventViewColumnで生成されたのEventView格納用 */
@@ -52,7 +70,7 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
     /** ViewHolder全体のEventViewの配列の格納用 */
     private var eventViewGroup = mutableListOf<List<View>>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventGridViewHolder = EventGridViewHolder(EventColumnView(context, widthIsMatchParent))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventGridViewHolder = EventGridViewHolder(EventColumnView(context, widthIsMatchParent, scaleFrom, scaleTo))
 
     override fun getItemCount(): Int = group.size
 
@@ -63,10 +81,10 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
             onEventClickListener?.invoke(it)
         }
         holder.view.onEventDragListener = {
-            onEventDragListener?.let { onDrag -> onDrag(it) }
+            onEventDragListener?.invoke(it)
         }
         holder.view.onEventStretchListener = {
-            onEventStretchListener?.let { onStretch -> onStretch(it) }
+            onEventStretchListener?.invoke(it)
         }
         holder.view.onEventChangedListener = { old, new, hideAll ->
             onEventChangedListener?.invoke(old, new)
@@ -112,6 +130,13 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
         }
     }
 
+    /** 目盛りの範囲を設定します */
+    internal fun setScale(from: Int, to: Int) {
+        scaleFrom = from
+        scaleTo = to
+        replace(events, day)
+    }
+
     /**
      * イベントを取得します
      */
@@ -124,7 +149,7 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
      */
     private fun scaleRefresh() {
         onScaleRefreshListener?.let {
-            it(overTime)
+            it(minTime, maxTime)
         }
     }
 }
