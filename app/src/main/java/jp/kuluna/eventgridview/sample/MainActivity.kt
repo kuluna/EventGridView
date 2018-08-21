@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
         val limits: List<Limit> = listOf(
                 Limit(countStart, countEnd, 3, 6)
         )
-        binding.eventGridView.showCounter(events, Date(), limits)
 
+        binding.eventGridView.showCounter(events, Date(), limits)
     }
 }
