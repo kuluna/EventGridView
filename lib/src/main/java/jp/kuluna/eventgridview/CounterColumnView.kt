@@ -24,6 +24,8 @@ open class CounterColumnView(context: Context, var scaleFrom: Int, var scaleTo: 
     private val density = context.resources.displayMetrics.density
     /** Eventの横幅(dp) */
     private val widthDp = 40
+    /** 目盛り一つの幅 */
+    private val aScale: Int = context.resources.getDimension(R.dimen.a_scale).toInt()
     /** RecyclerViewにおけるこのViewの現在のPosition */
     private var layoutPosition = 0
     private var counters: MutableList<Counter> = mutableListOf()
@@ -31,7 +33,7 @@ open class CounterColumnView(context: Context, var scaleFrom: Int, var scaleTo: 
     var counterViews = mutableListOf<View>()
     /** 目盛りの開始時点(Dp) */
     private val dpOfScaleFrom
-        get() = ((scaleFrom * 40 - 20) * density).toInt()
+        get() = (aScale * (scaleFrom - 0.5)).toInt()
 
     init {
         layoutParams = FrameLayout.LayoutParams((widthDp * density).toInt(), FrameLayout.LayoutParams.MATCH_PARENT).apply {
@@ -87,7 +89,7 @@ open class CounterColumnView(context: Context, var scaleFrom: Int, var scaleTo: 
             // マージン指定
             val marginParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, (y * density).toInt()).apply {
                 topMargin = (fromY * density).toInt() - dpOfScaleFrom
-                bottomMargin = (getOverTime(day, counter.end) * 40 * density).toInt()
+                bottomMargin = getOverTime(day, counter.end) * aScale
             }
 
             binding.counterFrame.setOnClickListener {

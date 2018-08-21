@@ -42,7 +42,7 @@ class EventGridView : FrameLayout {
                 binding.scaleFrom = getScaleFrom()
                 binding.scaleTo = getScaleTo()
                 // イベントが変更されたら目盛りに合わせてグリッドの高さを更新する
-                binding.gridViews.layoutParams.height = (context.resources.displayMetrics.density * 40 * (getScaleTo() - getScaleFrom() + 1)).toInt()
+                binding.gridViews.layoutParams.height = (context.resources.getDimension(R.dimen.a_scale) * (getScaleTo() - getScaleFrom() + 1)).toInt()
             }
         }
 

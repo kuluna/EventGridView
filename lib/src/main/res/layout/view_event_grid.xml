@@ -27,8 +27,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="40dp"
-            android:paddingTop="40dp">
+            android:paddingBottom="@dimen/a_scale"
+            android:paddingTop="@dimen/a_scale">
 
 
             <jp.kuluna.eventgridview.NonScrollListView
@@ -44,7 +44,7 @@
             android:id="@+id/grid_views"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="40dp"
+            android:layout_marginStart="@dimen/a_scale"
             android:orientation="horizontal">
 
             <jp.kuluna.eventgridview.TouchableRecyclerView
@@ -67,7 +67,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="@dimen/a_scale"
             android:layout_marginTop="0dp"
             android:orientation="horizontal">
 
@@ -91,7 +91,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="@dimen/a_scale"
             android:layout_gravity="bottom"
             android:orientation="horizontal">
 
