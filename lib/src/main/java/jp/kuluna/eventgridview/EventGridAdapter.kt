@@ -81,10 +81,10 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
             onEventClickListener?.invoke(it)
         }
         holder.view.onEventDragListener = {
-            onEventDragListener?.let { onDrag -> onDrag(it) }
+            onEventDragListener?.invoke(it)
         }
         holder.view.onEventStretchListener = {
-            onEventStretchListener?.let { onStretch -> onStretch(it) }
+            onEventStretchListener?.invoke(it)
         }
         holder.view.onEventChangedListener = { old, new, hideAll ->
             onEventChangedListener?.invoke(old, new)
