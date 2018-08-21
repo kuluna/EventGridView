@@ -35,12 +35,14 @@ class EventGridView : FrameLayout {
         set(value) {
             binding.eventGridRecyclerView.adapter = value
             value?.onScaleRefreshListener = { _, _ ->
-                binding.scaleFrom = getScaleFrom()
-                binding.scaleTo = getScaleTo()
                 scaleListAdapter.setItemsIn(getScaleFrom() + 1, getScaleTo() - 1)
                 if (binding.counterVisibility) {
                     refreshCounter(value?.getEvents() ?: emptyList())
                 }
+                binding.scaleFrom = getScaleFrom()
+                binding.scaleTo = getScaleTo()
+                // イベントが変更されたら目盛りに合わせてグリッドの高さを更新する
+                binding.gridViews.layoutParams.height = (context.resources.displayMetrics.density * 40 * (getScaleTo() - getScaleFrom() + 1)).toInt()
             }
         }
 

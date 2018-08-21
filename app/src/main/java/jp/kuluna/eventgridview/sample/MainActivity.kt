@@ -88,6 +88,6 @@ class MainActivity : AppCompatActivity() {
                 Limit(countStart, countEnd, 3, 6)
         )
 
-       binding.eventGridView.showCounter(events, Date(), limits)
+        binding.eventGridView.showCounter(events, Date(), limits)
     }
 }
