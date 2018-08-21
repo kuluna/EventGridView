@@ -48,7 +48,7 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean, privat
     /** Eventの横幅(dp) */
     private val widthDp = 48
     /** 目盛り一つの幅 */
-    private val aScale: Int = context.resources.getDimension(R.dimen.a_scale).toInt()
+    private val aScale: Int = context.resources.getDimensionPixelSize(R.dimen.a_scale)
     /** Eventの最低の高さ */
     private var minEventHeight = convertPxToRoundedDp(90.0F) // 固定値にしてあります
     /** Eventの高さ最大値 */

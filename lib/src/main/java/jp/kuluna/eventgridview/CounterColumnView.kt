@@ -25,7 +25,7 @@ open class CounterColumnView(context: Context, var scaleFrom: Int, var scaleTo: 
     /** Eventの横幅(dp) */
     private val widthDp = 40
     /** 目盛り一つの幅 */
-    private val aScale: Int = context.resources.getDimension(R.dimen.a_scale).toInt()
+    private val aScale: Int = context.resources.getDimensionPixelSize(R.dimen.a_scale)
     /** RecyclerViewにおけるこのViewの現在のPosition */
     private var layoutPosition = 0
     private var counters: MutableList<Counter> = mutableListOf()
