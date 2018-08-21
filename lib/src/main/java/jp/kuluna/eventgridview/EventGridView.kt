@@ -18,6 +18,7 @@ class EventGridView : FrameLayout {
     private val binding: ViewEventGridBinding
     private var counterGridAdapter: CounterGridAdapter? = null
     private var limits: List<Limit> = emptyList()
+    private var countFilter: ((Event) -> (Int))? = null
     private var scaleListAdapter: ScaleListAdapter
     private var scaleFrom: Int? = null
     private var scaleTo: Int? = null
@@ -51,14 +52,16 @@ class EventGridView : FrameLayout {
      * @param events 集計するEventのリスト
      * @param date 基準となる日付
      * @param limits 各時間帯の上限・下限値(任意)
+     * @param filter  カウントのフィルタ。条件ごとにカウントする数を指定できる(任意)
      */
-    fun showCounter(events: List<Event>, date: Date, limits: List<Limit> = emptyList()) {
+    fun showCounter(events: List<Event>, date: Date, limits: List<Limit> = emptyList(), filter: ((Event) -> Int)? = null) {
         val counterGridAdapter = CounterGridAdapter(context)
         this.counterGridAdapter = counterGridAdapter
         counterGridAdapter.setScale(getScaleFrom(), getScaleTo())
         binding.counterVisibility = true
         binding.counterGridRecyclerView.adapter = counterGridAdapter
         this.limits = limits
+        this.countFilter = filter
 
         // カウンタの状態が変わる区切りを保存する
         var periods = mutableListOf<Date>()
@@ -77,7 +80,9 @@ class EventGridView : FrameLayout {
         for (i in 0..(periods.size - 2)) {
             val period = periods[i]
             val limit = limits.firstOrNull { it.start <= period && it.end > period }
-            counters.add(Counter(periods[i], periods[i + 1], events.count { it.start <= period && it.end > period }, limit?.minimum, limit?.maximum))
+            counters.add(Counter(periods[i], periods[i + 1], events.filter { it.start <= period && it.end > period }.map {
+                countFilter?.invoke(it) ?: 1
+            }.sum(), limit?.minimum, limit?.maximum))
         }
         counterGridAdapter.replace(counters, date)
         // 目盛りを再設定します
@@ -104,7 +109,9 @@ class EventGridView : FrameLayout {
         for (i in 0..(periods.size - 2)) {
             val period = periods[i]
             val limit = limits.firstOrNull { it.start <= period && it.end > period }
-            counters.add(Counter(periods[i], periods[i + 1], events.count { it.start <= period && it.end > period }, limit?.minimum, limit?.maximum))
+            counters.add(Counter(periods[i], periods[i + 1], events.filter { it.start <= period && it.end > period }.map {
+                countFilter?.invoke(it) ?: 1
+            }.sum(), limit?.minimum, limit?.maximum))
         }
         counterGridAdapter.replace(counters, counterGridAdapter.day)
         // 目盛りを再設定します
