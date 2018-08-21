@@ -47,6 +47,8 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean, privat
     private var adjustStartTapY = 0f
     /** Eventの横幅(dp) */
     private val widthDp = 48
+    /** 目盛り一つの幅 */
+    private val aScale: Int = context.resources.getDimension(R.dimen.a_scale).toInt()
     /** Eventの最低の高さ */
     private var minEventHeight = convertPxToRoundedDp(90.0F) // 固定値にしてあります
     /** Eventの高さ最大値 */
@@ -62,10 +64,7 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean, privat
     private var elapsedTime: TimeParams? = null
     /** 目盛りの開始時点(Dp) */
     private val dpOfScaleFrom
-        get() = ((scaleFrom * 40 - 20) * density).toInt()
-    /** 目盛りの終了時点(Dp) */
-    private val dpOfScaleTo
-        get() = (scaleTo * 40 * density).toInt()
+        get() = (aScale * (scaleFrom - 0.5)).toInt()
 
     init {
         val width = if (widthIsMatchParent) {
@@ -129,7 +128,7 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean, privat
                     eventBinding.root.layoutParams = (eventBinding.root.layoutParams as FrameLayout.LayoutParams).apply {
                         val newMargin = (newStart.fromY * density).toInt() - dpOfScaleFrom
                         topMargin = newMargin
-                        bottomMargin = (getOverTime(event.start, event.end) * 40 * density).toInt()
+                        bottomMargin = getOverTime(event.start, event.end) * aScale
                     }
 
                     // 編集表示用のEventを書き換えます
@@ -193,7 +192,7 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean, privat
             // マージン指定
             val marginParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, (y * density).toInt()).apply {
                 topMargin = (fromY * density).toInt() - dpOfScaleFrom
-                bottomMargin = (getOverTime(event.start, event.end) * 40 * density).toInt()
+                bottomMargin = getOverTime(event.start, event.end) * aScale
             }
 
             if (event.draggable) {
