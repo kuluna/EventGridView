@@ -22,6 +22,8 @@ import kotlin.math.roundToInt
  * イベントを1列内に表示するためのView
  * @param context Android Context
  * @param widthIsMatchParent true に設定すると width が match_parent に
+ * @param scaleFrom 目盛りの開始時刻
+ * @param scaleTo 目盛りの終了時刻
  */
 @SuppressLint("ViewConstructor")
 open class EventColumnView(context: Context, widthIsMatchParent: Boolean, private val scaleFrom: Int, private val scaleTo: Int) : FrameLayout(context) {

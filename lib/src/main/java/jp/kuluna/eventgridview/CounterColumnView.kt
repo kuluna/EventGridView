@@ -13,6 +13,8 @@ import java.util.*
 /**
  * カウンタを1列内に表示するためのView
  * @param context Android Context
+ * @param scaleFrom 目盛りの開始時刻
+ * @param scaleTo 目盛りの終了時刻
  */
 @SuppressLint("ViewConstructor")
 open class CounterColumnView(context: Context, var scaleFrom: Int, var scaleTo: Int) : FrameLayout(context) {
