@@ -73,9 +73,10 @@ class DraggableEventGridListView : FrameLayout {
      * @param events 集計するEventのリスト
      * @param date 基準となる日付
      * @param limits 各時間帯の上限・下限値(任意)
+     * @param filter  カウントのフィルタ。条件ごとにカウントする数を指定できる(任意)
      */
-    fun showCounter(events: List<Event>, date: Date, limits: List<Limit> = emptyList()) {
-        eventGridView.showCounter(events, date, limits)
+    fun showCounter(events: List<Event>, date: Date, limits: List<Limit> = emptyList(), filter: ((Event) -> Int)? = null) {
+        eventGridView.showCounter(events, date, limits, filter)
     }
 
     /** イベントにクリックリスナを実装します */

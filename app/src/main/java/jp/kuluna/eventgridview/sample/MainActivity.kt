@@ -88,6 +88,12 @@ class MainActivity : AppCompatActivity() {
                 Limit(countStart, countEnd, 3, 6)
         )
 
-        binding.eventGridView.showCounter(events, Date(), limits)
+        binding.eventGridView.showCounter(events, Date(), limits) {
+            // イベントごとにカウントする数量を指定する場合はこのように記述してください
+            when {
+                it.text == "Event1" -> -1
+                else -> 1
+            }
+        }
     }
 }
