@@ -40,22 +40,22 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
     private val lastEnd
         get() = events.maxBy { it.end }?.end
     /** 最小の時間(単位:時間) */
-    val minTime: Int
+    val minTime: Int?
         get() {
             val selectCal = Calendar.getInstance()
             selectCal.time = day
             val firstStartCal = Calendar.getInstance()
-            firstStartCal.time = firstStart ?: day
+            firstStartCal.time = firstStart ?: return null
 
             return firstStartCal.get(Calendar.HOUR_OF_DAY)
         }
     /** 最大の時間(単位:時間) */
-    val maxTime: Int
+    val maxTime: Int?
         get() {
             val selectCal = Calendar.getInstance()
             selectCal.time = day
             val lastEndCal = Calendar.getInstance()
-            lastEndCal.time = lastEnd ?: day
+            lastEndCal.time = lastEnd ?: return null
 
             return if (selectCal.get(Calendar.DATE) != lastEndCal.get(Calendar.DATE)) {
                 // 日跨ぎ有りなら+24時間と、端数を考慮して+1時間
@@ -149,7 +149,7 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
      */
     private fun scaleRefresh() {
         onScaleRefreshListener?.let {
-            it(minTime, maxTime)
+            it(minTime ?: 0, maxTime ?: 24)
         }
     }
 }

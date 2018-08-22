@@ -15,18 +15,31 @@ open class CounterGridAdapter(private val context: Context) : RecyclerView.Adapt
     var onCounterClickListener: ((Counter) -> Unit)? = null
 
     private var counters = emptyList<Counter>()
+    /** 最初の開始時刻 */
+    private val firstStart
+        get() = counters.minBy { it.start }?.start
     /** 最後の終了時刻 */
     private val lastEnd
         get() = counters.maxBy { it.end }?.end
     /** 基準日 */
     var day = Date()
+    /** 最小の時間(単位:時間) */
+    val minTime: Int?
+        get() {
+            val selectCal = Calendar.getInstance()
+            selectCal.time = day
+            val firstStartCal = Calendar.getInstance()
+            firstStartCal.time = firstStart ?: return null
+
+            return firstStartCal.get(Calendar.HOUR_OF_DAY)
+        }
     /** 時間の最大値 */
-    val maxTime: Int
+    val maxTime: Int?
         get() {
             val selectCal = Calendar.getInstance()
             selectCal.time = day
             val lastEndCal = Calendar.getInstance()
-            lastEndCal.time = lastEnd ?: day
+            lastEndCal.time = lastEnd ?: return null
 
             return if (selectCal.get(Calendar.DATE) != lastEndCal.get(Calendar.DATE)) {
                 // 日跨ぎ有りなら+24時間と、端数を考慮して+1時間

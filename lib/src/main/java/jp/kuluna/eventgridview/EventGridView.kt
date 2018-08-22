@@ -13,6 +13,8 @@ import android.widget.FrameLayout
 import jp.kuluna.eventgridview.databinding.ViewEventGridBinding
 import jp.kuluna.eventgridview.databinding.ViewScaleListBinding
 import java.util.*
+import kotlin.math.max
+import kotlin.math.min
 
 class EventGridView : FrameLayout {
     private val binding: ViewEventGridBinding
@@ -22,6 +24,8 @@ class EventGridView : FrameLayout {
     private var scaleListAdapter: ScaleListAdapter
     private var scaleFrom: Int? = null
     private var scaleTo: Int? = null
+    private var onEventClickListener: ((Event) -> Unit)? = null
+    private var onCounterClickListener: ((Counter) -> Unit)? = null
 
     private fun getScaleFrom(): Int {
         return scaleFrom ?: 0
@@ -34,7 +38,10 @@ class EventGridView : FrameLayout {
     var adapter: EventGridAdapter?
         get() = binding.eventGridRecyclerView.adapter as? EventGridAdapter
         set(value) {
-            binding.eventGridRecyclerView.adapter = value
+            binding.eventGridRecyclerView.adapter = value.apply {
+                // リスナーをセットし直す
+                this?.onEventClickListener = onEventClickListener
+            }
             value?.onScaleRefreshListener = { _, _ ->
                 scaleListAdapter.setItemsIn(getScaleFrom() + 1, getScaleTo() - 1)
                 if (binding.counterVisibility) {
@@ -44,6 +51,27 @@ class EventGridView : FrameLayout {
                 binding.scaleTo = getScaleTo()
                 // イベントが変更されたら目盛りに合わせてグリッドの高さを更新する
                 binding.gridViews.layoutParams.height = (context.resources.getDimension(R.dimen.a_scale) * (getScaleTo() - getScaleFrom() + 1)).toInt()
+            }
+            setScale(scaleFrom, scaleTo)
+        }
+
+    /** Event・Counterの時間の最小値 */
+    val minTime: Int?
+        get() {
+            val value = min(adapter?.minTime ?: 48, counterGridAdapter?.minTime ?: 48)
+            return when (value) {
+                48 -> null // 空っぽならnull
+                else -> value
+            }
+        }
+
+    /** Event・Counterの時間の最大値 */
+    val maxTime: Int?
+        get() {
+            val value = max(adapter?.maxTime ?: 0, counterGridAdapter?.maxTime ?: 0)
+            return when (value) {
+                0 -> null // 空っぽならnull
+                else -> value
             }
         }
 
@@ -85,6 +113,7 @@ class EventGridView : FrameLayout {
             }.sum(), limit?.minimum, limit?.maximum))
         }
         counterGridAdapter.replace(counters, date)
+        counterGridAdapter.onCounterClickListener = onCounterClickListener
         // 目盛りを再設定します
         scaleListAdapter.setItemsIn(getScaleFrom() + 1, getScaleTo() - 1)
     }
@@ -114,6 +143,7 @@ class EventGridView : FrameLayout {
             }.sum(), limit?.minimum, limit?.maximum))
         }
         counterGridAdapter.replace(counters, counterGridAdapter.day)
+        counterGridAdapter.onCounterClickListener = onCounterClickListener
         // 目盛りを再設定します
         scaleListAdapter.setItemsIn(getScaleFrom() + 1, getScaleTo() - 1)
     }
@@ -121,11 +151,13 @@ class EventGridView : FrameLayout {
     /** イベントにクリックリスナを実装します */
     fun setOnEventClickListener(onEventClickListener: ((Event) -> Unit)?) {
         adapter?.onEventClickListener = onEventClickListener
+        this.onEventClickListener = onEventClickListener
     }
 
     /** カウンタにクリックリスナを実装します */
     fun setOnCounterClickListener(onCounterClickListener: ((Counter) -> Unit)?) {
         counterGridAdapter?.onCounterClickListener = onCounterClickListener
+        this.onCounterClickListener = onCounterClickListener
     }
 
     /** 目盛りの範囲を設定します(データに合わせる場合はnull) */
@@ -170,6 +202,10 @@ class EventGridView : FrameLayout {
 
         /** from-toの間の時間(単位:時間)をItemsに格納します */
         fun setItemsIn(from: Int, to: Int) {
+            // 引数の値が不正の場合はエラー
+            if (from > 48 || to > 48 || from > to) {
+                throw IllegalArgumentException()
+            }
             val newItems = mutableListOf<Int>()
             for (i in from..to) {
                 newItems.add(i)
