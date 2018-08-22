@@ -4,6 +4,7 @@ import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
+import org.apache.commons.lang.time.DateUtils
 import java.util.*
 
 /**
@@ -22,7 +23,7 @@ open class CounterGridAdapter(private val context: Context) : RecyclerView.Adapt
     private val lastEnd
         get() = counters.maxBy { it.end }?.end
     /** 基準日 */
-    var day = Date()
+    var day = DateUtils.truncate(Date(), Calendar.DATE)
     /** 最小の時間(単位:時間) */
     val minTime: Int
         get() {
@@ -34,7 +35,7 @@ open class CounterGridAdapter(private val context: Context) : RecyclerView.Adapt
             return firstStartCal.get(Calendar.HOUR_OF_DAY)
         }
     /** 時間の最大値 */
-    val maxTime: Int?
+    val maxTime: Int
         get() {
             val selectCal = Calendar.getInstance()
             selectCal.time = day
@@ -87,5 +88,12 @@ open class CounterGridAdapter(private val context: Context) : RecyclerView.Adapt
         scaleFrom = from
         scaleTo = to
         replace(counters, day)
+    }
+
+    /**
+     * カウンタを取得します
+     */
+    fun getCounters(): List<Counter> {
+        return counters
     }
 }

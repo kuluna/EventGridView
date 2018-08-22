@@ -8,6 +8,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import jp.kuluna.eventgridview.databinding.ViewEventBinding
+import org.apache.commons.lang.time.DateUtils
 import java.util.*
 
 /**
@@ -32,7 +33,7 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
 
     private var events = emptyList<Event>()
     private var group = emptyList<Pair<Int, List<Event>>>()
-    private var day = Date()
+    private var day = DateUtils.truncate(Date(), Calendar.DATE)
     /** 最初の開始時刻 */
     private val firstStart
         get() = events.minBy { it.start }?.start
@@ -40,7 +41,7 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
     private val lastEnd
         get() = events.maxBy { it.end }?.end
     /** 最小の時間(単位:時間) */
-    val minTime: Int?
+    val minTime: Int
         get() {
             val selectCal = Calendar.getInstance()
             selectCal.time = day
@@ -50,7 +51,7 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
             return firstStartCal.get(Calendar.HOUR_OF_DAY)
         }
     /** 最大の時間(単位:時間) */
-    val maxTime: Int?
+    val maxTime: Int
         get() {
             val selectCal = Calendar.getInstance()
             selectCal.time = day
@@ -149,7 +150,7 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
      */
     private fun scaleRefresh() {
         onScaleRefreshListener?.let {
-            it(minTime ?: 0, maxTime ?: 24)
+            it(minTime, maxTime)
         }
     }
 }

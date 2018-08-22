@@ -13,8 +13,6 @@ import android.widget.FrameLayout
 import jp.kuluna.eventgridview.databinding.ViewEventGridBinding
 import jp.kuluna.eventgridview.databinding.ViewScaleListBinding
 import java.util.*
-import kotlin.math.max
-import kotlin.math.min
 
 class EventGridView : FrameLayout {
     private val binding: ViewEventGridBinding
@@ -38,10 +36,7 @@ class EventGridView : FrameLayout {
     var adapter: EventGridAdapter?
         get() = binding.eventGridRecyclerView.adapter as? EventGridAdapter
         set(value) {
-            binding.eventGridRecyclerView.adapter = value.apply {
-                // リスナーをセットし直す
-                this?.onEventClickListener = onEventClickListener
-            }
+            binding.eventGridRecyclerView.adapter = value
             value?.onScaleRefreshListener = { _, _ ->
                 scaleListAdapter.setItemsIn(getScaleFrom() + 1, getScaleTo() - 1)
                 if (binding.counterVisibility) {
@@ -52,25 +47,42 @@ class EventGridView : FrameLayout {
                 // イベントが変更されたら目盛りに合わせてグリッドの高さを更新する
                 binding.gridViews.layoutParams.height = (context.resources.getDimension(R.dimen.a_scale) * (getScaleTo() - getScaleFrom() + 1)).toInt()
             }
+            value?.onEventClickListener = onEventClickListener
             setScale(scaleFrom, scaleTo)
         }
 
     /** Event・Counterの時間の最小値 */
     val minTimeOfData: Int
         get() {
-            val scaleOfMax = resources.getInteger(R.integer.scale_of_max)
-            val value = min(adapter?.minTime ?: scaleOfMax, counterGridAdapter?.minTime
-                    ?: scaleOfMax)
-            return when (value) {
-                scaleOfMax -> 0 // 空っぽならnull
-                else -> value
+            val minTimeValues = mutableListOf<Int>()
+            adapter?.let {
+                if (it.getEvents().isNotEmpty()) {
+                    minTimeValues.add(it.minTime)
+                }
             }
+            counterGridAdapter?.let {
+                if (it.getCounters().isNotEmpty()) {
+                    minTimeValues.add(it.minTime)
+                }
+            }
+            return minTimeValues.min() ?: 0
         }
 
     /** Event・Counterの時間の最大値 */
     val maxTimeOfData: Int
         get() {
-            return max(adapter?.maxTime ?: 0, counterGridAdapter?.maxTime ?: 0)
+            val maxTimeValues = mutableListOf<Int>()
+            adapter?.let {
+                if (it.getEvents().isNotEmpty()) {
+                    maxTimeValues.add(it.maxTime)
+                }
+            }
+            counterGridAdapter?.let {
+                if (it.getCounters().isNotEmpty()) {
+                    maxTimeValues.add(it.maxTime)
+                }
+            }
+            return maxTimeValues.max() ?: 0
         }
 
     /**
