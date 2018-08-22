@@ -24,12 +24,12 @@ open class CounterGridAdapter(private val context: Context) : RecyclerView.Adapt
     /** 基準日 */
     var day = Date()
     /** 最小の時間(単位:時間) */
-    val minTime: Int?
+    val minTime: Int
         get() {
             val selectCal = Calendar.getInstance()
             selectCal.time = day
             val firstStartCal = Calendar.getInstance()
-            firstStartCal.time = firstStart ?: return null
+            firstStartCal.time = firstStart ?: day
 
             return firstStartCal.get(Calendar.HOUR_OF_DAY)
         }
@@ -39,7 +39,7 @@ open class CounterGridAdapter(private val context: Context) : RecyclerView.Adapt
             val selectCal = Calendar.getInstance()
             selectCal.time = day
             val lastEndCal = Calendar.getInstance()
-            lastEndCal.time = lastEnd ?: return null
+            lastEndCal.time = lastEnd ?: day
 
             return if (selectCal.get(Calendar.DATE) != lastEndCal.get(Calendar.DATE)) {
                 // 日跨ぎ有りなら+24時間と、端数を考慮して+1時間

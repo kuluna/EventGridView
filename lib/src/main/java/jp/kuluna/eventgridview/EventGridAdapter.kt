@@ -45,7 +45,7 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
             val selectCal = Calendar.getInstance()
             selectCal.time = day
             val firstStartCal = Calendar.getInstance()
-            firstStartCal.time = firstStart ?: return null
+            firstStartCal.time = firstStart ?: day
 
             return firstStartCal.get(Calendar.HOUR_OF_DAY)
         }
@@ -55,7 +55,7 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
             val selectCal = Calendar.getInstance()
             selectCal.time = day
             val lastEndCal = Calendar.getInstance()
-            lastEndCal.time = lastEnd ?: return null
+            lastEndCal.time = lastEnd ?: day
 
             return if (selectCal.get(Calendar.DATE) != lastEndCal.get(Calendar.DATE)) {
                 // 日跨ぎ有りなら+24時間と、端数を考慮して+1時間

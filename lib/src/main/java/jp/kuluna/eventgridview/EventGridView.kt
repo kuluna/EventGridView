@@ -56,23 +56,21 @@ class EventGridView : FrameLayout {
         }
 
     /** Event・Counterの時間の最小値 */
-    val minTime: Int?
+    val minTimeOfData: Int
         get() {
-            val value = min(adapter?.minTime ?: 48, counterGridAdapter?.minTime ?: 48)
+            val scaleOfMax = resources.getInteger(R.integer.scale_of_max)
+            val value = min(adapter?.minTime ?: scaleOfMax, counterGridAdapter?.minTime
+                    ?: scaleOfMax)
             return when (value) {
-                48 -> null // 空っぽならnull
+                scaleOfMax -> 0 // 空っぽならnull
                 else -> value
             }
         }
 
     /** Event・Counterの時間の最大値 */
-    val maxTime: Int?
+    val maxTimeOfData: Int
         get() {
-            val value = max(adapter?.maxTime ?: 0, counterGridAdapter?.maxTime ?: 0)
-            return when (value) {
-                0 -> null // 空っぽならnull
-                else -> value
-            }
+            return max(adapter?.maxTime ?: 0, counterGridAdapter?.maxTime ?: 0)
         }
 
     /**
@@ -202,10 +200,18 @@ class EventGridView : FrameLayout {
 
         /** from-toの間の時間(単位:時間)をItemsに格納します */
         fun setItemsIn(from: Int, to: Int) {
-            // 引数の値が不正の場合はエラー
-            if (from > 48 || to > 48 || from > to) {
-                throw IllegalArgumentException()
+            val scaleOfMax = context.resources.getInteger(R.integer.scale_of_max)
+            // 引数の値が不正な場合はエラー
+            if (from > to) {
+                throw IllegalArgumentException("The argument `from` must be smaller than the argument `to`.")
             }
+            if (from > scaleOfMax) {
+                throw IllegalArgumentException("The argument `from` must be smaller than $scaleOfMax.")
+            }
+            if (to > scaleOfMax) {
+                throw IllegalArgumentException("The argument `to` must be smaller than $scaleOfMax.")
+            }
+
             val newItems = mutableListOf<Int>()
             for (i in from..to) {
                 newItems.add(i)
