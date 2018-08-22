@@ -76,9 +76,8 @@ open class CounterGridAdapter(private val context: Context) : RecyclerView.Adapt
      * カウンタを全てクリアして引数で渡すカウンタに差し替えます。
      * @param counters カウンタリスト
      */
-    fun replace(counters: List<Counter>, day: Date) {
+    fun replace(counters: List<Counter>) {
         this.counters = counters
-        this.day = day
 
         notifyDataSetChanged()
     }
@@ -87,7 +86,7 @@ open class CounterGridAdapter(private val context: Context) : RecyclerView.Adapt
     internal fun setScale(from: Int, to: Int) {
         scaleFrom = from
         scaleTo = to
-        replace(counters, day)
+        replace(counters)
     }
 
     /**
