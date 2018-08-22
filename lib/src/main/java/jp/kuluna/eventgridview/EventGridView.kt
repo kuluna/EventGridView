@@ -98,7 +98,7 @@ class EventGridView : FrameLayout {
         counterGridAdapter.day = date
 
         refreshCounter(events)
-        refreshScale(scaleFrom, scaleTo)
+        setScale(scaleFrom, scaleTo)
     }
 
     /** カウンタを更新します */
