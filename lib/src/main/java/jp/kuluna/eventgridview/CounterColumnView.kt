@@ -7,17 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import jp.kuluna.eventgridview.databinding.ViewCounterBinding
-import org.apache.commons.lang.time.DateUtils
 import java.util.*
 
 /**
  * カウンタを1列内に表示するためのView
  * @param context Android Context
- * @param scaleFrom 目盛りの開始時刻
- * @param scaleTo 目盛りの終了時刻
  */
 @SuppressLint("ViewConstructor")
-open class CounterColumnView(context: Context, var scaleFrom: Int, var scaleTo: Int) : FrameLayout(context) {
+open class CounterColumnView(context: Context) : FrameLayout(context) {
     /** Counterのクリックイベント */
     var onCounterClickListener: ((Counter) -> Unit)? = null
     /** ディスプレイの密度取得 (この値にdpを掛けるとpxになる) */
@@ -29,11 +26,10 @@ open class CounterColumnView(context: Context, var scaleFrom: Int, var scaleTo: 
     /** RecyclerViewにおけるこのViewの現在のPosition */
     private var layoutPosition = 0
     private var counters: MutableList<Counter> = mutableListOf()
+    /** 日付 */
+    lateinit var day: Date
     /** EventViewの格納用 */
     var counterViews = mutableListOf<View>()
-    /** 目盛りの開始時点(Dp) */
-    private val dpOfScaleFrom
-        get() = (aScale * (scaleFrom - 0.5)).toInt()
 
     init {
         layoutParams = FrameLayout.LayoutParams((widthDp * density).toInt(), FrameLayout.LayoutParams.MATCH_PARENT).apply {
@@ -49,6 +45,7 @@ open class CounterColumnView(context: Context, var scaleFrom: Int, var scaleTo: 
      * @param layoutPosition RecyclerViewから見たLayoutPosition
      */
     fun set(day: Date, counters: List<Counter>, layoutPosition: Int) {
+        this.day = day
         removeAllViews()
         this.layoutPosition = layoutPosition
         this.counters = counters.toMutableList()
@@ -88,8 +85,7 @@ open class CounterColumnView(context: Context, var scaleFrom: Int, var scaleTo: 
 
             // マージン指定
             val marginParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, (y * density).toInt()).apply {
-                topMargin = (fromY * density).toInt() - dpOfScaleFrom
-                bottomMargin = getOverTime(day, counter.end) * aScale
+                topMargin = (fromY * density).toInt() + aScale / 2
             }
 
             binding.counterFrame.setOnClickListener {
@@ -97,19 +93,6 @@ open class CounterColumnView(context: Context, var scaleFrom: Int, var scaleTo: 
             }
             addView(binding.root, FrameLayout.LayoutParams(marginParams))
         }
-    }
-
-    /**
-     * 超過した時間を取得します
-     * @param day 基準となる日付
-     * @param end イベントの終了時間
-     */
-    private fun getOverTime(day: Date, end: Date): Int {
-        val cal = Calendar.getInstance().apply {
-            time = end
-        }
-        val overTime = scaleTo - (cal.get(Calendar.HOUR_OF_DAY) + 1 + if (DateUtils.isSameDay(cal.time, day)) 0 else 24)
-        return if (overTime < 0) overTime else 0
     }
 
     private fun getParams(date: Date, addDays: Int = 0): TimeParams {
