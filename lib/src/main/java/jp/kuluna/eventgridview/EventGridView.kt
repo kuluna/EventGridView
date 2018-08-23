@@ -24,6 +24,7 @@ class EventGridView : FrameLayout {
     private var scaleTo: Int? = null
     private var onEventClickListener: ((Event) -> Unit)? = null
     private var onCounterClickListener: ((Counter) -> Unit)? = null
+    private var onEventChangedListener: ((Event, Event) -> Unit)? = null
 
     private fun getScaleFrom(): Int {
         return scaleFrom ?: 0
@@ -37,14 +38,12 @@ class EventGridView : FrameLayout {
         get() = binding.eventGridRecyclerView.adapter as? EventGridAdapter
         set(value) {
             binding.eventGridRecyclerView.adapter = value
-            value?.onScaleRefreshListener = { _, _ ->
-                if (binding.counterVisibility) {
-                    refreshCounter(value?.getEvents() ?: emptyList())
-                }
-                refreshScale(scaleFrom, scaleTo)
-            }
+            setOnEventChangedListener(onEventChangedListener)
             value?.onEventClickListener = onEventClickListener
-            setScale(scaleFrom, scaleTo)
+            value?.onReplacehListener = { _ ->
+                setScale()
+            }
+            setScale()
         }
 
     /** Event・Counterの時間の最小値 */
@@ -140,23 +139,34 @@ class EventGridView : FrameLayout {
         this.onCounterClickListener = onCounterClickListener
     }
 
-    /** 目盛りの範囲を設定します(データに合わせる場合はnull) */
-    fun setScale(from: Int?, to: Int?) {
-        val newScaleFrom = getScaleFrom()
-        val newScaleTo = getScaleTo()
-        adapter?.setScale(newScaleFrom, newScaleTo)
-        refreshScale(from, to)
+    /** イベント変更のリスナを実装します */
+    fun setOnEventChangedListener(onEventChangedListener: ((Event, Event) -> Unit)?) {
+        adapter?.onEventChangedListener = { old, new ->
+            // カウンタが設定されていたら更新する
+            if (binding.counterVisibility) {
+                refreshCounter(adapter?.getEvents() ?: emptyList())
+            }
+            // 目盛りを更新する
+            setScale()
+            // ユーザが設定した部分
+            onEventChangedListener?.invoke(old, new)
+        }
+        this.onEventChangedListener = onEventChangedListener
     }
 
-    /** 目盛りの範囲を更新します(データに合わせる場合はnull) */
-    private fun refreshScale(from: Int?, to: Int?) {
+    /** 目盛りの範囲を設定します(データに合わせる場合はnull) */
+    fun setScale(from: Int? = scaleFrom, to: Int? = scaleTo) {
         scaleFrom = from
         scaleTo = to
         val newScaleFrom = getScaleFrom()
         val newScaleTo = getScaleTo()
         scaleListAdapter.setItemsIn(newScaleFrom + 1, newScaleTo - 1)
-        counterGridAdapter?.setScale(newScaleFrom, newScaleTo)
-        binding.gridViews.layoutParams.height = (context.resources.getDimension(R.dimen.a_scale) * (newScaleTo - newScaleFrom + 1)).toInt()
+        // 最大のデータに合わせて高さを指定する
+        binding.gridViews.layoutParams.height = (context.resources.getDimension(R.dimen.a_scale) * (newScaleTo + 1)).toInt()
+        // 目盛りに合わせてマージンを指定する
+        binding.gridViews.layoutParams = (binding.gridViews.layoutParams as FrameLayout.LayoutParams).apply {
+            topMargin = -context.resources.getDimension(R.dimen.a_scale).toInt() * newScaleFrom
+        }
         binding.scaleFrom = newScaleFrom
         binding.scaleTo = newScaleTo
     }

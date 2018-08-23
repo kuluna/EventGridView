@@ -19,17 +19,15 @@ import java.util.*
 open class EventGridAdapter(private val context: Context, private val widthIsMatchParent: Boolean = false) : RecyclerView.Adapter<EventGridViewHolder>() {
     /** Eventのクリックイベント */
     var onEventClickListener: ((Event) -> Unit)? = null
-    /** Eventの変更イベント */
-    var onEventChangedListener: ((Event, Event) -> Unit)? = null
-    /** 目盛が変わったことによる変更イベント */
-    var onScaleRefreshListener: ((Int, Int) -> Unit)? = null
     /** ドラッグのイベント */
     var onEventDragListener: ((DragEvent) -> Unit)? = null
     /** Event伸縮のイベント */
     var onEventStretchListener: ((MotionEvent) -> Unit)? = null
 
-    private var scaleFrom: Int = 0
-    private var scaleTo: Int = 23
+    /** Eventの変更イベント */
+    internal var onEventChangedListener: ((Event, Event) -> Unit)? = null
+    /** replaceが行われた際のイベント */
+    internal var onReplacehListener: ((List<Event>) -> Unit)? = null
 
     private var events = emptyList<Event>()
     private var group = emptyList<Pair<Int, List<Event>>>()
@@ -71,7 +69,7 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
     /** ViewHolder全体のEventViewの配列の格納用 */
     private var eventViewGroup = mutableListOf<List<View>>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventGridViewHolder = EventGridViewHolder(EventColumnView(context, widthIsMatchParent, scaleFrom, scaleTo))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventGridViewHolder = EventGridViewHolder(EventColumnView(context, widthIsMatchParent))
 
     override fun getItemCount(): Int = group.size
 
@@ -88,8 +86,6 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
             onEventStretchListener?.invoke(it)
         }
         holder.view.onEventChangedListener = { old, new, hideAll ->
-            onEventChangedListener?.invoke(old, new)
-
             // イベント長さ調整ボタンを全て非表示
             if (hideAll) {
                 hideAllAdjustButton()
@@ -97,7 +93,7 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
             val index = events.indexOf(old)
             events[index].start = new.start
             events[index].end = new.end
-            scaleRefresh()
+            onEventChangedListener?.invoke(old, new)
         }
 
         eventViews = holder.view.eventViews
@@ -113,8 +109,8 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
         this.group = this.events.groupBy { it.groupId }.toList()
         this.day = day
 
-        scaleRefresh()
         notifyDataSetChanged()
+        onReplacehListener?.invoke(events)
     }
 
     /**
@@ -131,26 +127,10 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
         }
     }
 
-    /** 目盛りの範囲を設定します */
-    internal fun setScale(from: Int, to: Int) {
-        scaleFrom = from
-        scaleTo = to
-        replace(events, day)
-    }
-
     /**
      * イベントを取得します
      */
     fun getEvents(): List<Event> {
         return events
-    }
-
-    /**
-     * 目盛を終了が最も遅いイベントに合わせて更新します
-     */
-    private fun scaleRefresh() {
-        onScaleRefreshListener?.let {
-            it(minTime, maxTime)
-        }
     }
 }

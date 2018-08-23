@@ -26,10 +26,13 @@ class MainActivity : AppCompatActivity() {
             setScale(9, 20)
             // 各イベントは下記のように実装してください
             setOnEventClickListener {
-                Log.i("MainActivity", it.toString())
+                Log.i("onEventClick", it.toString())
             }
             setOnCounterClickListener {
-                Log.i("MainActivity", it.toString())
+                Log.i("onCounterClick", it.toString())
+            }
+            setOnEventChangedListener { old, new ->
+                Log.i("onEventChanged", "$old -> $new")
             }
         }
         showEvents()

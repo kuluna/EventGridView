@@ -95,6 +95,11 @@ class DraggableEventGridListView : FrameLayout {
         eventGridView.setOnCounterClickListener(onCounterClickListener)
     }
 
+    /** イベント変更のリスナを実装します */
+    fun setOnEventChangedListener(onEventChangedListener: ((Event, Event) -> Unit)?) {
+        eventGridView.setOnEventChangedListener(onEventChangedListener)
+    }
+
     /** 目盛りの範囲を設定します(データに合わせる場合はnull) */
     fun setScale(from: Int?, to: Int?) {
         eventGridView.setScale(from, to)
