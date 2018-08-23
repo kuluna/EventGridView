@@ -8,6 +8,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import jp.kuluna.eventgridview.databinding.ViewEventBinding
+import org.apache.commons.lang.time.DateUtils
 import java.util.*
 
 /**
@@ -32,7 +33,7 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
 
     private var events = emptyList<Event>()
     private var group = emptyList<Pair<Int, List<Event>>>()
-    private var day = Date()
+    private var day = DateUtils.truncate(Date(), Calendar.DATE)
     /** 最初の開始時刻 */
     private val firstStart
         get() = events.minBy { it.start }?.start

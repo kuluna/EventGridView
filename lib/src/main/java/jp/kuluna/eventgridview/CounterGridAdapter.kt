@@ -4,6 +4,7 @@ import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
+import org.apache.commons.lang.time.DateUtils
 import java.util.*
 
 /**
@@ -15,11 +16,24 @@ open class CounterGridAdapter(private val context: Context) : RecyclerView.Adapt
     var onCounterClickListener: ((Counter) -> Unit)? = null
 
     private var counters = emptyList<Counter>()
+    /** 最初の開始時刻 */
+    private val firstStart
+        get() = counters.minBy { it.start }?.start
     /** 最後の終了時刻 */
     private val lastEnd
         get() = counters.maxBy { it.end }?.end
     /** 基準日 */
-    var day = Date()
+    var day = DateUtils.truncate(Date(), Calendar.DATE)
+    /** 最小の時間(単位:時間) */
+    val minTime: Int
+        get() {
+            val selectCal = Calendar.getInstance()
+            selectCal.time = day
+            val firstStartCal = Calendar.getInstance()
+            firstStartCal.time = firstStart ?: day
+
+            return firstStartCal.get(Calendar.HOUR_OF_DAY)
+        }
     /** 時間の最大値 */
     val maxTime: Int
         get() {
@@ -62,9 +76,8 @@ open class CounterGridAdapter(private val context: Context) : RecyclerView.Adapt
      * カウンタを全てクリアして引数で渡すカウンタに差し替えます。
      * @param counters カウンタリスト
      */
-    fun replace(counters: List<Counter>, day: Date) {
+    fun replace(counters: List<Counter>) {
         this.counters = counters
-        this.day = day
 
         notifyDataSetChanged()
     }
@@ -73,6 +86,13 @@ open class CounterGridAdapter(private val context: Context) : RecyclerView.Adapt
     internal fun setScale(from: Int, to: Int) {
         scaleFrom = from
         scaleTo = to
-        replace(counters, day)
+        replace(counters)
+    }
+
+    /**
+     * カウンタを取得します
+     */
+    fun getCounters(): List<Counter> {
+        return counters
     }
 }

@@ -68,6 +68,12 @@ class DraggableEventGridListView : FrameLayout {
             }
         }
 
+    val maxTimeOfData: Int
+        get() = eventGridView.maxTimeOfData
+
+    val minTimeOfData: Int
+        get() = eventGridView.minTimeOfData
+
     /**
      * Eventのカウンタを表示します
      * @param events 集計するEventのリスト
