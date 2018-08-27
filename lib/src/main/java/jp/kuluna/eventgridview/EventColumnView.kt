@@ -26,6 +26,10 @@ import kotlin.math.roundToInt
 open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : FrameLayout(context) {
     /** Eventのクリックイベント */
     var onEventClickListener: ((Event) -> Unit)? = null
+    /** ドラッグ開始イベント */
+    var onDragStartListener: ((DragEvent) -> Unit)? = null
+    /** ドラッグ終了イベント */
+    var onDragEndListener: ((DragEvent) -> Unit)? = null
     /** Eventのドラッグイベント */
     var onEventDragListener: ((DragEvent) -> Unit)? = null
     /** Eventの伸縮イベント */
@@ -132,6 +136,14 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
                     eventBinding.topAdjust.visibility = View.VISIBLE
                     eventBinding.bottomAdjust.visibility = View.VISIBLE
 
+                    true
+                }
+                DragEvent.ACTION_DRAG_STARTED -> {
+                    onDragStartListener?.invoke(dragEvent)
+                    true
+                }
+                DragEvent.ACTION_DRAG_ENDED -> {
+                    onDragEndListener?.invoke(dragEvent)
                     true
                 }
                 else -> true

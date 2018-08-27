@@ -34,6 +34,12 @@ class MainActivity : AppCompatActivity() {
             setOnEventChangedListener { old, new ->
                 Log.i("onEventChanged", "$old -> $new")
             }
+            setOnDragStartListener { event ->
+                Log.i("onDragStart", event.toString())
+            }
+            setOnDragEndListener { event ->
+                Log.i("onDragEnd", event.toString())
+            }
         }
         showEvents()
     }
