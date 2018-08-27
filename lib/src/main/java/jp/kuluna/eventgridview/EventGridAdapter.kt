@@ -56,12 +56,18 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
             val lastEndCal = Calendar.getInstance()
             lastEndCal.time = lastEnd ?: day
 
+            // 0分なら１時間目盛りを減らして調整する
+            var adjust = 0
+            if(lastEndCal.get(Calendar.MINUTE) == 0){
+                adjust = 1
+            }
+
             return if (selectCal.get(Calendar.DATE) != lastEndCal.get(Calendar.DATE)) {
                 // 日跨ぎ有りなら+24時間と、端数を考慮して+1時間
-                lastEndCal.get(Calendar.HOUR_OF_DAY) + 24 + 1
+                lastEndCal.get(Calendar.HOUR_OF_DAY) + 24 + 1 - adjust
             } else {
                 // 日跨ぎなしなら端数を考慮して+1時間
-                lastEndCal.get(Calendar.HOUR_OF_DAY) + 1
+                lastEndCal.get(Calendar.HOUR_OF_DAY) + 1 - adjust
             }
         }
     /** EventViewColumnで生成されたのEventView格納用 */
