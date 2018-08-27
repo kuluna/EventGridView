@@ -90,12 +90,12 @@ class DraggableEventGridListView : FrameLayout {
         eventGridView.setOnEventClickListener(onEventClickListener)
     }
 
-    /** イベントにクリックリスナを実装します */
+    /** ドラッグ開始リスナを実装します */
     fun setOnDragStartListener(onDragStartListener: ((DragEvent) -> Unit)?) {
         eventGridView.setOnDragStartListener(onDragStartListener)
     }
 
-    /** イベントにクリックリスナを実装します */
+    /** ドラッグ終了リスナを実装します */
     fun setOnDragEndListener(onDragEndListener: ((DragEvent) -> Unit)?) {
         eventGridView.setOnDragEndListener(onDragEndListener)
     }

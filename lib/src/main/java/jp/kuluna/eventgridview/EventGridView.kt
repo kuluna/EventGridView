@@ -135,12 +135,6 @@ class EventGridView : FrameLayout {
         this.onEventClickListener = onEventClickListener
     }
 
-    /** カウンタにクリックリスナを実装します */
-    fun setOnCounterClickListener(onCounterClickListener: ((Counter) -> Unit)?) {
-        counterGridAdapter?.onCounterClickListener = onCounterClickListener
-        this.onCounterClickListener = onCounterClickListener
-    }
-
     /** ドラッグ開始リスナを実装します */
     fun setOnDragStartListener(onDragStartListener: ((DragEvent) -> Unit)?) {
         adapter?.onDragStartListener = onDragStartListener
@@ -151,6 +145,12 @@ class EventGridView : FrameLayout {
     fun setOnDragEndListener(onDragEndListener: ((DragEvent) -> Unit)?) {
         adapter?.onDragEndListener = onDragEndListener
         this.onDragEndListener = onDragEndListener
+    }
+
+    /** カウンタにクリックリスナを実装します */
+    fun setOnCounterClickListener(onCounterClickListener: ((Counter) -> Unit)?) {
+        counterGridAdapter?.onCounterClickListener = onCounterClickListener
+        this.onCounterClickListener = onCounterClickListener
     }
 
     /** イベント変更のリスナを実装します */
