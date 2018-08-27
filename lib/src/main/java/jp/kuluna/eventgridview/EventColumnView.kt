@@ -26,12 +26,12 @@ import kotlin.math.roundToInt
 open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : FrameLayout(context) {
     /** Eventのクリックイベント */
     var onEventClickListener: ((Event) -> Unit)? = null
+    /** Eventのドラッグイベント */
+    var onEventDragListener: ((DragEvent) -> Unit)? = null
     /** ドラッグ開始イベント */
     var onDragStartListener: ((DragEvent) -> Unit)? = null
     /** ドラッグ終了イベント */
     var onDragEndListener: ((DragEvent) -> Unit)? = null
-    /** Eventのドラッグイベント */
-    var onEventDragListener: ((DragEvent) -> Unit)? = null
     /** Eventの伸縮イベント */
     var onEventStretchListener: ((MotionEvent) -> Unit)? = null
     /** Eventをドラッグしたことによる変更イベント */
