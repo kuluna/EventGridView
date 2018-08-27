@@ -2,7 +2,6 @@ package jp.kuluna.eventgridview
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
-import android.view.View
 import android.view.ViewGroup
 import org.apache.commons.lang.time.DateUtils
 import java.util.*
@@ -56,10 +55,6 @@ open class CounterGridAdapter(private val context: Context) : RecyclerView.Adapt
                 lastEndCal.get(Calendar.HOUR_OF_DAY) + 1 - adjustMax
             }
         }
-    /** CounterViewColumnで生成されたのCounterView格納用 */
-    private var counterViews = mutableListOf<View>()
-    /** ViewHolder全体のCounterViewの配列の格納用 */
-    private var counterViewGroup = mutableListOf<List<View>>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CounterGridViewHolder = CounterGridViewHolder(CounterColumnView(context))
 
@@ -71,8 +66,6 @@ open class CounterGridAdapter(private val context: Context) : RecyclerView.Adapt
         holder.view.onCounterClickListener = {
             onCounterClickListener?.invoke(it)
         }
-        counterViews = holder.view.counterViews
-        counterViewGroup.add(counterViews)
     }
 
     /**

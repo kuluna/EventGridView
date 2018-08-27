@@ -58,7 +58,7 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
 
             // 0分なら１時間目盛りを減らして調整する
             var adjustMax = 0
-            if(lastEndCal.get(Calendar.MINUTE) == 0){
+            if (lastEndCal.get(Calendar.MINUTE) == 0) {
                 adjustMax = 1
             }
 
