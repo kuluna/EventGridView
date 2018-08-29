@@ -24,6 +24,10 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
     /** Event伸縮のイベント */
     var onEventStretchListener: ((MotionEvent) -> Unit)? = null
 
+    /** ドラッグ開始イベント */
+    internal var onDragStartListener: ((DragEvent) -> Unit)? = null
+    /** ドラッグ終了イベント */
+    internal var onDragEndListener: ((DragEvent) -> Unit)? = null
     /** Eventの変更イベント */
     internal var onEventChangedListener: ((Event, Event) -> Unit)? = null
     /** replaceが行われた際のイベント */
@@ -84,6 +88,12 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
         holder.view.set(day, event, holder.layoutPosition)
         holder.view.onEventClickListener = {
             onEventClickListener?.invoke(it)
+        }
+        holder.view.onDragStartListener = {
+            onDragStartListener?.invoke(it)
+        }
+        holder.view.onDragEndListener = {
+            onDragEndListener?.invoke(it)
         }
         holder.view.onEventDragListener = {
             onEventDragListener?.invoke(it)

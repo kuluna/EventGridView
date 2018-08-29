@@ -28,6 +28,10 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
     var onEventClickListener: ((Event) -> Unit)? = null
     /** Eventのドラッグイベント */
     var onEventDragListener: ((DragEvent) -> Unit)? = null
+    /** ドラッグ開始イベント */
+    var onDragStartListener: ((DragEvent) -> Unit)? = null
+    /** ドラッグ終了イベント */
+    var onDragEndListener: ((DragEvent) -> Unit)? = null
     /** Eventの伸縮イベント */
     var onEventStretchListener: ((MotionEvent) -> Unit)? = null
     /** Eventをドラッグしたことによる変更イベント */
@@ -49,7 +53,7 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
     /** Eventの最低の高さ */
     private var minEventHeight = convertPxToRoundedDp(90.0F) // 固定値にしてあります
     /** Eventの高さ最大値 */
-    private var maxEventHeight = 0
+    private var maxEventHeight = 24 * aScale
     /** Eventのトップの最大値 */
     private var maxEventTop = (TimeParams(24, 0).fromY - 10) * density// 10dp単位なので-10
     /** EventViewの格納用 */
@@ -111,9 +115,6 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
 
                     events[position] = event
 
-                    // Eventの長さ最大値設定
-                    maxEventHeight = eventBinding.root.layoutParams.height
-
                     // 変更を通知
                     onEventChangedListener?.invoke(Event.from(intent.getBundleExtra("event")), event, true)
 
@@ -132,6 +133,14 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
                     eventBinding.topAdjust.visibility = View.VISIBLE
                     eventBinding.bottomAdjust.visibility = View.VISIBLE
 
+                    true
+                }
+                DragEvent.ACTION_DRAG_STARTED -> {
+                    onDragStartListener?.invoke(dragEvent)
+                    true
+                }
+                DragEvent.ACTION_DRAG_ENDED -> {
+                    onDragEndListener?.invoke(dragEvent)
                     true
                 }
                 else -> true

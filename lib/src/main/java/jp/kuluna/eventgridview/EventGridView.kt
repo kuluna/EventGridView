@@ -4,10 +4,7 @@ import android.content.Context
 import android.databinding.DataBindingUtil
 import android.support.v7.widget.LinearLayoutManager
 import android.util.AttributeSet
-import android.view.LayoutInflater
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ArrayAdapter
 import android.widget.FrameLayout
 import jp.kuluna.eventgridview.databinding.ViewEventGridBinding
@@ -26,6 +23,9 @@ class EventGridView : FrameLayout {
     private var onCounterClickListener: ((Counter) -> Unit)? = null
     private var onEventChangedListener: ((Event, Event) -> Unit)? = null
 
+    private var onDragStartListener: ((DragEvent) -> Unit)? = null
+    private var onDragEndListener: ((DragEvent) -> Unit)? = null
+
     private fun getScaleFrom(): Int {
         return scaleFrom ?: 0
     }
@@ -40,6 +40,8 @@ class EventGridView : FrameLayout {
             binding.eventGridRecyclerView.adapter = value
             setOnEventChangedListener(onEventChangedListener)
             value?.onEventClickListener = onEventClickListener
+            value?.onDragStartListener = onDragStartListener
+            value?.onDragEndListener = onDragEndListener
             value?.onReplacehListener = { _ ->
                 setScale()
             }
@@ -131,6 +133,18 @@ class EventGridView : FrameLayout {
     fun setOnEventClickListener(onEventClickListener: ((Event) -> Unit)?) {
         adapter?.onEventClickListener = onEventClickListener
         this.onEventClickListener = onEventClickListener
+    }
+
+    /** ドラッグ開始リスナを実装します */
+    fun setOnDragStartListener(onDragStartListener: ((DragEvent) -> Unit)?) {
+        adapter?.onDragStartListener = onDragStartListener
+        this.onDragStartListener = onDragStartListener
+    }
+
+    /** ドラッグ終了リスナを実装します */
+    fun setOnDragEndListener(onDragEndListener: ((DragEvent) -> Unit)?) {
+        adapter?.onDragEndListener = onDragEndListener
+        this.onDragEndListener = onDragEndListener
     }
 
     /** カウンタにクリックリスナを実装します */
