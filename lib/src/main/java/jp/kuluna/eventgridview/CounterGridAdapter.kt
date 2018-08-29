@@ -2,7 +2,6 @@ package jp.kuluna.eventgridview
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
-import android.view.View
 import android.view.ViewGroup
 import org.apache.commons.lang.time.DateUtils
 import java.util.*
@@ -42,18 +41,20 @@ open class CounterGridAdapter(private val context: Context) : RecyclerView.Adapt
             val lastEndCal = Calendar.getInstance()
             lastEndCal.time = lastEnd ?: day
 
-            return if (selectCal.get(Calendar.DATE) != lastEndCal.get(Calendar.DATE)) {
-                // 日跨ぎ有りなら+24時間と、端数を考慮して+1時間
-                lastEndCal.get(Calendar.HOUR_OF_DAY) + 24 + 1
+            // 0分でなければ１時間目盛りを増やして調整する
+            val adjustMax = if (lastEndCal.get(Calendar.MINUTE) == 0) {
+                0
             } else {
-                // 日跨ぎなしなら端数を考慮して+1時間
-                lastEndCal.get(Calendar.HOUR_OF_DAY) + 1
+                1
+            }
+
+            return if (selectCal.get(Calendar.DATE) != lastEndCal.get(Calendar.DATE)) {
+                // 日跨ぎ有りなら+24時間
+                lastEndCal.get(Calendar.HOUR_OF_DAY) + 24 + adjustMax
+            } else {
+                lastEndCal.get(Calendar.HOUR_OF_DAY) + adjustMax
             }
         }
-    /** CounterViewColumnで生成されたのCounterView格納用 */
-    private var counterViews = mutableListOf<View>()
-    /** ViewHolder全体のCounterViewの配列の格納用 */
-    private var counterViewGroup = mutableListOf<List<View>>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CounterGridViewHolder = CounterGridViewHolder(CounterColumnView(context))
 
@@ -65,8 +66,6 @@ open class CounterGridAdapter(private val context: Context) : RecyclerView.Adapt
         holder.view.onCounterClickListener = {
             onCounterClickListener?.invoke(it)
         }
-        counterViews = holder.view.counterViews
-        counterViewGroup.add(counterViews)
     }
 
     /**

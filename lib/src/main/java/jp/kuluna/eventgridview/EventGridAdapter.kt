@@ -24,6 +24,10 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
     /** Event伸縮のイベント */
     var onEventStretchListener: ((MotionEvent) -> Unit)? = null
 
+    /** ドラッグ開始イベント */
+    internal var onDragStartListener: ((DragEvent) -> Unit)? = null
+    /** ドラッグ終了イベント */
+    internal var onDragEndListener: ((DragEvent) -> Unit)? = null
     /** Eventの変更イベント */
     internal var onEventChangedListener: ((Event, Event) -> Unit)? = null
     /** replaceが行われた際のイベント */
@@ -56,12 +60,18 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
             val lastEndCal = Calendar.getInstance()
             lastEndCal.time = lastEnd ?: day
 
-            return if (selectCal.get(Calendar.DATE) != lastEndCal.get(Calendar.DATE)) {
-                // 日跨ぎ有りなら+24時間と、端数を考慮して+1時間
-                lastEndCal.get(Calendar.HOUR_OF_DAY) + 24 + 1
+            // 0分でなければ１時間目盛りを増やして調整する
+            val adjustMax = if (lastEndCal.get(Calendar.MINUTE) == 0) {
+                0
             } else {
-                // 日跨ぎなしなら端数を考慮して+1時間
-                lastEndCal.get(Calendar.HOUR_OF_DAY) + 1
+                1
+            }
+
+            return if (selectCal.get(Calendar.DATE) != lastEndCal.get(Calendar.DATE)) {
+                // 日跨ぎ有りなら+24時間
+                lastEndCal.get(Calendar.HOUR_OF_DAY) + 24 + adjustMax
+            } else {
+                lastEndCal.get(Calendar.HOUR_OF_DAY) + adjustMax
             }
         }
     /** EventViewColumnで生成されたのEventView格納用 */
@@ -78,6 +88,12 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
         holder.view.set(day, event, holder.layoutPosition)
         holder.view.onEventClickListener = {
             onEventClickListener?.invoke(it)
+        }
+        holder.view.onDragStartListener = {
+            onDragStartListener?.invoke(it)
+        }
+        holder.view.onDragEndListener = {
+            onDragEndListener?.invoke(it)
         }
         holder.view.onEventDragListener = {
             onEventDragListener?.invoke(it)
