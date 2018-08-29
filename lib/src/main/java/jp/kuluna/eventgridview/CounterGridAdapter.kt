@@ -41,18 +41,18 @@ open class CounterGridAdapter(private val context: Context) : RecyclerView.Adapt
             val lastEndCal = Calendar.getInstance()
             lastEndCal.time = lastEnd ?: day
 
-            // 0分なら１時間目盛りを減らして調整する
-            var adjustMax = 0
-            if (lastEndCal.get(Calendar.MINUTE) == 0) {
-                adjustMax = 1
+            // 0分でなければ１時間目盛りを増やして調整する
+            val adjustMax = if (lastEndCal.get(Calendar.MINUTE) == 0) {
+                0
+            } else {
+                1
             }
 
             return if (selectCal.get(Calendar.DATE) != lastEndCal.get(Calendar.DATE)) {
-                // 日跨ぎ有りなら+24時間と、端数を考慮して+1時間
-                lastEndCal.get(Calendar.HOUR_OF_DAY) + 24 + 1 - adjustMax
+                // 日跨ぎ有りなら+24時間
+                lastEndCal.get(Calendar.HOUR_OF_DAY) + 24 + adjustMax
             } else {
-                // 日跨ぎなしなら端数を考慮して+1時間
-                lastEndCal.get(Calendar.HOUR_OF_DAY) + 1 - adjustMax
+                lastEndCal.get(Calendar.HOUR_OF_DAY) + adjustMax
             }
         }
 
