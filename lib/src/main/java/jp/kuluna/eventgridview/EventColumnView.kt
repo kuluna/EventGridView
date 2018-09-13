@@ -88,8 +88,9 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
                     val eventBinding = DataBindingUtil.bind<ViewEventBinding>(dragEvent.localState as View)!!
 
                     oldEvent = event
+                    // EventGridView上部のマージン(20dp)分下にずれるので補正
+                    var dropStartY = dragEvent.y - adjustStartTapY - 20
                     // 開始地点がマイナスになった時は0時0分開始にする
-                    var dropStartY = dragEvent.y - adjustStartTapY
                     if (dropStartY < 0) {
                         dropStartY = 0f
                     } else if (dropStartY >= maxEventTop) {
