@@ -118,7 +118,9 @@ class EventGridView : FrameLayout {
         periods = periods.distinct().sorted().toMutableList()
         // カウンタのリストを作成する
         val counters = mutableListOf<Counter>()
+        // 直前のカウント数を記憶する
         var beforeCount: Int? = null
+        // ループ内でperiods[i + 1]のデータを使用するため-2
         for (i in 0..(periods.size - 2)) {
             val period = periods[i]
             val limit = limits.firstOrNull { it.start <= period && it.end > period }
