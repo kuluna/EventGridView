@@ -10,7 +10,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 27
         versionCode 1
-        versionName "1.4.0"
+        versionName "1.4.1"
 
         consumerProguardFiles 'proguard-rules.pro'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -35,7 +35,7 @@ dependencies {
     implementation 'com.android.support:cardview-v7:27.1.1'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     implementation 'com.android.support:support-v4:27.1.1'
-    implementation 'commons-lang:commons-lang:2.6'
+    implementation 'org.apache.commons:commons-lang3:3.8'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
@@ -45,7 +45,7 @@ publish {
     userOrg = 'kuluna'
     groupId = 'jp.kuluna'
     artifactId = 'eventgridview'
-    publishVersion = '1.4.0'
+    publishVersion = '1.4.1'
     desc = 'A day events view. Draggable.'
     website = 'https://github.com/kuluna/EventGridView'
 }

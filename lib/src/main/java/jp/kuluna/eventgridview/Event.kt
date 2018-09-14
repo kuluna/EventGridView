@@ -3,7 +3,7 @@ package jp.kuluna.eventgridview
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.annotation.ColorInt
-import org.apache.commons.lang.time.DateUtils
+import org.apache.commons.lang3.time.DateUtils
 import java.util.*
 import kotlin.math.roundToInt
 
