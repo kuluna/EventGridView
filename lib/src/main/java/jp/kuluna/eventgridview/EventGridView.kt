@@ -118,12 +118,20 @@ class EventGridView : FrameLayout {
         periods = periods.distinct().sorted().toMutableList()
         // カウンタのリストを作成する
         val counters = mutableListOf<Counter>()
+        var beforeCount: Int? = null
         for (i in 0..(periods.size - 2)) {
             val period = periods[i]
             val limit = limits.firstOrNull { it.start <= period && it.end > period }
-            counters.add(Counter(periods[i], periods[i + 1], events.filter { it.start <= period && it.end > period }.map {
+            val count = events.filter { it.start <= period && it.end > period }.map {
                 countFilter?.invoke(it) ?: 1
-            }.sum(), limit?.minimum, limit?.maximum))
+            }.sum()
+            if (count != beforeCount) {
+                counters.add(Counter(periods[i], periods[i + 1], count, limit?.minimum, limit?.maximum))
+            } else if (counters.isNotEmpty()) {
+                // 前のカウントと値が同じならつなげる
+                counters.last().end = periods[i + 1]
+            }
+            beforeCount = count
         }
         counterGridAdapter.replace(counters)
         counterGridAdapter.onCounterClickListener = onCounterClickListener
