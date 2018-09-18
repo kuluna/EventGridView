@@ -44,7 +44,9 @@ class DraggableEventGridListView : FrameLayout {
                 if (it.action == DragEvent.ACTION_DRAG_ENDED) {
                     handler.removeMessageAll()
                 } else if (it.action != DragEvent.ACTION_DRAG_EXITED) {
-                    val frameY = it.y - binding.scrollView.scrollY
+                    val aScale = context.resources.getDimension(R.dimen.a_scale)
+                    val frameY = it.y - binding.scrollView.scrollY - aScale * (eventGridView.scaleFrom
+                            ?: 0)
                     when {
                         frameY < height * 0.1 -> handler.moveToTop()
                         frameY > height * 0.9 -> handler.moveToBottom()
