@@ -44,6 +44,8 @@ class DraggableEventGridListView : FrameLayout {
                 if (it.action == DragEvent.ACTION_DRAG_ENDED) {
                     handler.removeMessageAll()
                 } else if (it.action != DragEvent.ACTION_DRAG_EXITED) {
+                    // 自動ドラッグ
+                    // 範囲指定をしていると目盛りぶんオートドラッグがずれるので調整する
                     val aScale = context.resources.getDimension(R.dimen.a_scale)
                     val frameY = it.y - binding.scrollView.scrollY - aScale * (eventGridView.scaleFrom
                             ?: 0)
