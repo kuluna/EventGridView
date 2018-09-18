@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
         binding.eventGridView.apply {
             adapter = this@MainActivity.adapter
             // 表示範囲を固定する場合は下記のように指定してください
-            setScale(9, 20)
+            setScale(6, 24)
             // 各イベントは下記のように実装してください
             setOnEventClickListener {
                 Log.i("onEventClick", it.toString())

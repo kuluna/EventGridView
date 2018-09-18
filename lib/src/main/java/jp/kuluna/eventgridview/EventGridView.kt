@@ -17,7 +17,7 @@ class EventGridView : FrameLayout {
     private var limits: List<Limit> = emptyList()
     private var countFilter: ((Event) -> (Int))? = null
     private var scaleListAdapter: ScaleListAdapter
-    private var scaleFrom: Int? = null
+    internal var scaleFrom: Int? = null
     private var scaleTo: Int? = null
     private var onEventClickListener: ((Event) -> Unit)? = null
     private var onCounterClickListener: ((Counter) -> Unit)? = null
