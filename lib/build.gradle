@@ -54,15 +54,6 @@ bintray {
     }
 }
 
-//publish {
-//    userOrg = 'kuluna'
-//    groupId = 'jp.kuluna'
-//    artifactId = 'eventgridview'
-//    publishVersion = '1.4.2'
-//    desc = 'A day events view. Draggable.'
-//    website = 'https://github.com/kuluna/EventGridView'
-//}
-
 tasks.withType(Javadoc).all {
     enabled = false
 }
