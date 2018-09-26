@@ -4,15 +4,15 @@ import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.Context
 import android.content.Intent
-import androidx.databinding.DataBindingUtil
 import android.graphics.Point
-import androidx.core.view.ViewCompat
 import android.view.DragEvent
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.DragShadowBuilder
 import android.widget.FrameLayout
+import androidx.core.view.ViewCompat
+import androidx.databinding.DataBindingUtil
 import jp.kuluna.eventgridview.databinding.ViewEventBinding
 import java.util.*
 import kotlin.math.roundToInt
@@ -184,6 +184,12 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
                     val startParams = getParams(event.start)
                     val endParams = getParams(event.end, 1)
                     startParams.fromY to endParams.fromY - startParams.fromY
+                }
+
+                Event.CrossOver.FromNextDay -> {
+                    val startParams = getParams(event.start, 1)
+                    val endParams = getParams(event.end, 1)
+                    startParams.fromY to endParams.fromY
                 }
 
                 Event.CrossOver.FromPreviousDay -> {

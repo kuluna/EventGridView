@@ -61,7 +61,11 @@ data class Event(
     }
 
     fun getCrossOverType(base: Date): CrossOver {
-        return if (DateUtils.isSameDay(start, end)) {
+        val baseDate = DateUtils.truncate(base, Calendar.DATE)
+        val startDate = DateUtils.truncate(start, Calendar.DATE)
+        return if (startDate > baseDate) {
+            CrossOver.FromNextDay
+        } else if (DateUtils.isSameDay(start, end)) {
             CrossOver.None
         } else {
             if (DateUtils.isSameDay(start, base)) {
@@ -73,7 +77,7 @@ data class Event(
     }
 
     enum class CrossOver {
-        None, ToNextDay, FromPreviousDay
+        None, ToNextDay, FromPreviousDay, FromNextDay
     }
 }
 

@@ -1,12 +1,12 @@
 package jp.kuluna.eventgridview.sample
 
-import androidx.databinding.DataBindingUtil
 import android.os.Bundle
-import androidx.core.content.ContextCompat
-import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
 import jp.kuluna.eventgridview.Event
 import jp.kuluna.eventgridview.EventGridAdapter
 import jp.kuluna.eventgridview.Limit
