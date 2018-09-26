@@ -2,7 +2,7 @@ package jp.kuluna.eventgridview
 
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.support.annotation.ColorInt
+import androidx.annotation.ColorInt
 import org.apache.commons.lang3.time.DateUtils
 import java.util.*
 import kotlin.math.roundToInt
@@ -36,7 +36,7 @@ data class Event(
                 bundle.getInt("groupId"),
                 Date(bundle.getLong("start")),
                 Date(bundle.getLong("end")),
-                bundle.getString("text"),
+                bundle.getString("text") ?: "",
                 bundle.getInt("backgroundColor"),
                 bundle.getInt("textColor"),
                 bundle.getInt("borderColor"),

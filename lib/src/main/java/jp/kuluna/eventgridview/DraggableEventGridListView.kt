@@ -1,7 +1,7 @@
 package jp.kuluna.eventgridview
 
 import android.content.Context
-import android.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil
 import android.os.Handler
 import android.os.Message
 import android.util.AttributeSet

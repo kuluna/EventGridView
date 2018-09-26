@@ -1,7 +1,7 @@
 package jp.kuluna.eventgridview
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import org.apache.commons.lang3.time.DateUtils
 import java.util.*

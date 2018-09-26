@@ -1,6 +1,6 @@
 package jp.kuluna.eventgridview
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 
 open class EventGridViewHolder(val view: EventColumnView) : RecyclerView.ViewHolder(view)
 

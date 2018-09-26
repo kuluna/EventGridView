@@ -4,9 +4,9 @@ import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.Context
 import android.content.Intent
-import android.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil
 import android.graphics.Point
-import android.support.v4.view.ViewCompat
+import androidx.core.view.ViewCompat
 import android.view.DragEvent
 import android.view.LayoutInflater
 import android.view.MotionEvent

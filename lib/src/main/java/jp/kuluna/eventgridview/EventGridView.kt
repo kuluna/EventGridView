@@ -1,8 +1,8 @@
 package jp.kuluna.eventgridview
 
 import android.content.Context
-import android.databinding.DataBindingUtil
-import android.support.v7.widget.LinearLayoutManager
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.util.AttributeSet
 import android.view.*
 import android.widget.ArrayAdapter
