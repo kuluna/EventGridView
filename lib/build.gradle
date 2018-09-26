@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'com.jfrog.bintray'
 
 android {
     compileSdkVersion 27
@@ -25,7 +25,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.novoda:bintray-release:0.8.1'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
     }
 }
 
@@ -41,14 +41,28 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
 
-publish {
-    userOrg = 'kuluna'
-    groupId = 'jp.kuluna'
-    artifactId = 'eventgridview'
-    publishVersion = '1.4.2'
-    desc = 'A day events view. Draggable.'
-    website = 'https://github.com/kuluna/EventGridView'
+bintray {
+    user = System.getenv("BINTRAY_USER")
+    key = System.getenv("BINTRAY_KEY")
+
+    pkg {
+        userOrg = 'kuluna'
+        repo = 'jp.kuluna'
+        name = 'eventgridview'
+        version {
+            name = '2.0.0'
+        }
+    }
 }
+
+//publish {
+//    userOrg = 'kuluna'
+//    groupId = 'jp.kuluna'
+//    artifactId = 'eventgridview'
+//    publishVersion = '1.4.2'
+//    desc = 'A day events view. Draggable.'
+//    website = 'https://github.com/kuluna/EventGridView'
+//}
 
 tasks.withType(Javadoc).all {
     enabled = false
