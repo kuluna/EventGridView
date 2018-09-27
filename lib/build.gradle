@@ -10,7 +10,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
-        versionName "2.0.0"
+        versionName "2.0.1"
 
         consumerProguardFiles 'proguard-rules.pro'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -49,7 +49,7 @@ bintray {
         repo = 'maven'
         name = 'eventgridview'
         version {
-            name = '2.0.0'
+            name = '2.0.1'
         }
     }
 }
