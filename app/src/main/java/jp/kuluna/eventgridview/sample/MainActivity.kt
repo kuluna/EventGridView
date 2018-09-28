@@ -28,6 +28,22 @@ class MainActivity : AppCompatActivity() {
             // 各イベントは下記のように実装してください
             setOnEventClickListener {
                 Log.i("onEventClick", it.toString())
+                // イベントのポジションを変更する場合は下記のように指定してください
+                val newStart = Calendar.getInstance().apply {
+                    time = it.start
+                    add(Calendar.HOUR_OF_DAY, 1)
+                }.time
+                val newEnd = Calendar.getInstance().apply {
+                    time = it.end
+                    add(Calendar.HOUR_OF_DAY, 1)
+                }.time
+                adapter?.updateEventPosition(newStart, newEnd) { event ->
+                    event.text == it.text
+                }
+                // イベントのExtraに変更を加える場合は下記のように指定してください
+                adapter?.updateEventExtra("newCond") { event ->
+                    event.text == it.text
+                }
             }
             setOnCounterClickListener {
                 Log.i("onCounterClick", it.toString())

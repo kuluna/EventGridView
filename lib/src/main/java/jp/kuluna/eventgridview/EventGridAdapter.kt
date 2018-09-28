@@ -149,4 +149,30 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
     fun getEvents(): List<Event> {
         return events
     }
+
+    /**
+     * イベントの位置を更新します
+     */
+    fun updateEventPosition(newStart: Date, newEnd: Date, cond: ((Event) -> Boolean)) {
+        for (i in 0 until events.size) {
+            val event = events[i]
+            if (cond(event)) {
+                event.start = newStart
+                event.end = newEnd
+            }
+        }
+        notifyDataSetChanged()
+    }
+
+    /**
+     * イベントのExtraを更新します
+     */
+    fun updateEventExtra(extra: String, cond: (Event) -> Boolean) {
+        for (i in 0 until events.size) {
+            val event = events[i]
+            if (cond(event)) {
+                event.extra = extra
+            }
+        }
+    }
 }
