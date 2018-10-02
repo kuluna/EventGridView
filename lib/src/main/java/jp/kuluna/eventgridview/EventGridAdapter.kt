@@ -166,6 +166,7 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
                     // グループが消えてしまったら全体更新
                     notifyDataSetChanged()
                 } else {
+                    // そうでなければグループ内更新
                     notifyItemChanged(index)
                 }
             }
