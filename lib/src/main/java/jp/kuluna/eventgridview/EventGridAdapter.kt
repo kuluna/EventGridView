@@ -151,7 +151,8 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
     }
 
     /**
-     * イベントの位置を更新します
+     * 特定のイベントを移動します
+     * イベントの追従などを行いたい場合に使用してください
      */
     fun updateEventPosition(newStart: Date, newEnd: Date, cond: ((Event) -> Boolean)) {
         for (i in 0 until events.size) {
@@ -159,13 +160,15 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
             if (cond(event)) {
                 event.start = newStart
                 event.end = newEnd
+                val index = group.indexOfFirst { it.first == event.groupId }
+                notifyItemChanged(index)
             }
         }
-        notifyDataSetChanged()
     }
 
     /**
-     * イベントのExtraを更新します
+     * 特定のイベントのExtraを更新します
+     * イベント変更時にExtraも変えたい場合に使用してください
      */
     fun updateEventExtra(extra: String, cond: (Event) -> Boolean) {
         for (i in 0 until events.size) {
