@@ -151,12 +151,33 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
     }
 
     /**
+     * 特定のイベントを削除します
+     */
+    fun removeEvent(cond: ((Event) -> Boolean)) {
+        val oldEvents = events
+        for (event in oldEvents) {
+            if (cond(event)) {
+                val index = group.indexOfFirst { it.first == event.groupId }
+                events = events.toMutableList().apply {
+                    remove(event)
+                }.toList()
+                this.group = this.events.groupBy { it.groupId }.toList()
+                if (events.none { it.groupId == event.groupId }) {
+                    // グループが消えてしまったら全体更新
+                    notifyDataSetChanged()
+                } else {
+                    notifyItemChanged(index)
+                }
+            }
+        }
+    }
+
+    /**
      * 特定のイベントを移動します
      * イベントの追従などを行いたい場合に使用してください
      */
     fun updateEventPosition(newStart: Date, newEnd: Date, cond: ((Event) -> Boolean)) {
-        for (i in 0 until events.size) {
-            val event = events[i]
+        for (event in events) {
             if (cond(event)) {
                 event.start = newStart
                 event.end = newEnd
@@ -171,8 +192,7 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
      * イベント変更時にExtraも変えたい場合に使用してください
      */
     fun updateEventExtra(extra: String, cond: (Event) -> Boolean) {
-        for (i in 0 until events.size) {
-            val event = events[i]
+        for (event in events) {
             if (cond(event)) {
                 event.extra = extra
             }
