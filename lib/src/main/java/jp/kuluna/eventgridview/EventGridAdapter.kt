@@ -32,6 +32,8 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
     internal var onEventChangedListener: ((Event, Event) -> Unit)? = null
     /** replaceが行われた際のイベント */
     internal var onReplacehListener: ((List<Event>) -> Unit)? = null
+    /** updateEventPositionが呼ばれた時のイベント */
+    internal var onUpdatePositionListener: (() -> Unit)? = null
 
     private var events = emptyList<Event>()
     private var group = emptyList<Pair<Int, List<Event>>>()
@@ -106,7 +108,7 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
             if (hideAll) {
                 hideAllAdjustButton()
             }
-            val index = events.indexOf(old)
+            val index = events.indexOfFirst { it.start == old.start && it.end == old.end && it.groupId == old.groupId }
             events[index].start = new.start
             events[index].end = new.end
             onEventChangedListener?.invoke(old, new)
@@ -184,6 +186,7 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
                 event.end = newEnd
                 val index = group.indexOfFirst { it.first == event.groupId }
                 notifyItemChanged(index)
+                onUpdatePositionListener?.invoke()
             }
         }
     }

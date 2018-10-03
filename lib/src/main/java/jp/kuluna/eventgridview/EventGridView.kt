@@ -42,6 +42,9 @@ class EventGridView : FrameLayout {
             value?.onEventClickListener = onEventClickListener
             value?.onDragStartListener = onDragStartListener
             value?.onDragEndListener = onDragEndListener
+            value?.onUpdatePositionListener = {
+                refreshCounter(adapter?.getEvents() ?: emptyList())
+            }
             value?.onReplacehListener = { _ ->
                 setScale()
             }
