@@ -31,7 +31,7 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
     /** Eventの変更イベント */
     internal var onEventChangedListener: ((Event, Event) -> Unit)? = null
     /** replaceが行われた際のイベント */
-    internal var onReplacehListener: ((List<Event>) -> Unit)? = null
+    internal var onReplaceListener: ((List<Event>) -> Unit)? = null
     /** updateEventPositionが呼ばれた時のイベント */
     internal var onUpdatePositionListener: (() -> Unit)? = null
 
@@ -128,7 +128,7 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
         this.day = day
 
         notifyDataSetChanged()
-        onReplacehListener?.invoke(events)
+        onReplaceListener?.invoke(events)
     }
 
     /**
