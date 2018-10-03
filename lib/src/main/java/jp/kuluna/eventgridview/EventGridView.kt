@@ -39,14 +39,16 @@ class EventGridView : FrameLayout {
         set(value) {
             binding.eventGridRecyclerView.adapter = value
             setOnEventChangedListener(onEventChangedListener)
-            value?.onEventClickListener = onEventClickListener
-            value?.onDragStartListener = onDragStartListener
-            value?.onDragEndListener = onDragEndListener
-            value?.onUpdatePositionListener = {
-                refreshCounter(adapter?.getEvents() ?: emptyList())
-            }
-            value?.onReplacehListener = { _ ->
-                setScale()
+            value?.let {
+                it.onEventClickListener = onEventClickListener
+                it.onDragStartListener = onDragStartListener
+                it.onDragEndListener = onDragEndListener
+                it.onUpdatePositionListener = {
+                    refreshCounter(adapter?.getEvents() ?: emptyList())
+                }
+                it.onReplacehListener = { _ ->
+                    setScale()
+                }
             }
             setScale()
         }
