@@ -171,6 +171,7 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
                     // そうでなければグループ内更新
                     notifyItemChanged(index)
                 }
+                onUpdatePositionListener?.invoke()
             }
         }
     }
