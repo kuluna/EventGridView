@@ -1,12 +1,12 @@
 package jp.kuluna.eventgridview
 
 import android.content.Context
-import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.RecyclerView
 import android.view.DragEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.RecyclerView
 import jp.kuluna.eventgridview.databinding.ViewEventBinding
 import org.apache.commons.lang3.time.DateUtils
 import java.util.*
@@ -123,7 +123,7 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
      * @param events イベントリスト
      */
     fun replace(events: List<Event>, day: Date) {
-        this.events = events
+        this.events = events.sortedBy { it.groupId }
         this.group = this.events.groupBy { it.groupId }.toList()
         this.day = day
 
@@ -156,14 +156,14 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
      * 特定のイベントを削除します
      */
     fun removeEvent(cond: ((Event) -> Boolean)) {
-        val oldEvents = events
+        val oldEvents = events.asSequence().sortedBy { it.groupId }.toList()
         for (event in oldEvents) {
             if (cond(event)) {
                 val index = group.indexOfFirst { it.first == event.groupId }
                 events = events.toMutableList().apply {
                     remove(event)
                 }.toList()
-                this.group = this.events.groupBy { it.groupId }.toList()
+                group = events.groupBy { it.groupId }.toList()
                 if (events.none { it.groupId == event.groupId }) {
                     // グループが消えてしまったら全体更新
                     notifyDataSetChanged()

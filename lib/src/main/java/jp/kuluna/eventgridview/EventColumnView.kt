@@ -115,7 +115,11 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
                     endCal.add(Calendar.MILLISECOND, distance.toInt())
                     event.end = endCal.time
 
-                    events[position] = event
+                    if (position != -1 && events.size > position) {
+                        events[position] = event
+                    } else {
+                        throw ArrayIndexOutOfBoundsException("position: $position events: $events")
+                    }
 
                     // 変更を通知
                     onEventChangedListener?.invoke(Event.from(intent.getBundleExtra("event")), event, true)
