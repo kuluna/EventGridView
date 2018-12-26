@@ -98,6 +98,7 @@ class MainActivity : AppCompatActivity() {
                     blueBorderColor,
                     null,
                     null,
+                    true,
                     true)
         }
 

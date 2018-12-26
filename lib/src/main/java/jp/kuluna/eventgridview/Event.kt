@@ -29,7 +29,9 @@ data class Event(
         /** 追加で保持したい値がある場合はここに代入 */
         var extra: String? = null,
         /** イベントのドラッグが可能かどうかのフラグ */
-        var draggable: Boolean = false
+        var draggable: Boolean = false,
+        /** イベントのクリックが可能かどうかのフラグ */
+        var clickable: Boolean = true
 ) {
     companion object {
         fun from(bundle: Bundle) = Event(

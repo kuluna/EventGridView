@@ -170,9 +170,11 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
             val binding = DataBindingUtil.inflate<ViewEventBinding>(inflater, R.layout.view_event, null, false)
             binding.event = event
 
-            // クリックイベント
-            binding.cardView.setOnClickListener {
-                onEventClickListener?.invoke(event)
+            if (event.clickable) {
+                // クリックイベント
+                binding.cardView.setOnClickListener {
+                    onEventClickListener?.invoke(event)
+                }
             }
 
             // 開始位置と高さを設定
