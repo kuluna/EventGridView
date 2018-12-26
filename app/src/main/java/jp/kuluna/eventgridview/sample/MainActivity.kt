@@ -98,7 +98,8 @@ class MainActivity : AppCompatActivity() {
                     blueBorderColor,
                     null,
                     null,
-                    true)
+                    true,
+                    random % 2 == 0)
         }
 
         adapter.replace(events, Date())
