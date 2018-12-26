@@ -14,7 +14,6 @@
         android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:foreground="?android:attr/selectableItemBackground"
         app:cardBackgroundColor="@{event.borderColor}"
         tools:cardBackgroundColor="@android:color/white">
 

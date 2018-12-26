@@ -5,6 +5,7 @@ import android.content.ClipData
 import android.content.Context
 import android.content.Intent
 import android.graphics.Point
+import android.util.TypedValue
 import android.view.DragEvent
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -175,6 +176,9 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
                 binding.cardView.setOnClickListener {
                     onEventClickListener?.invoke(event)
                 }
+                val outValue = TypedValue()
+                context.theme.resolveAttribute(android.R.attr.selectableItemBackground, outValue, true)
+                binding.cardView.foreground = context.resources.getDrawable(outValue.resourceId, context.theme)
             } else {
                 binding.cardView.foreground = null
             }
