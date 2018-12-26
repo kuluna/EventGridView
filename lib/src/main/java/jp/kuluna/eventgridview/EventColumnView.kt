@@ -175,6 +175,8 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
                 binding.cardView.setOnClickListener {
                     onEventClickListener?.invoke(event)
                 }
+            } else {
+                binding.cardView.foreground = null
             }
 
             // 開始位置と高さを設定
