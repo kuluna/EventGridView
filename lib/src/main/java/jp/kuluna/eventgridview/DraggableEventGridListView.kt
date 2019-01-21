@@ -1,16 +1,15 @@
 package jp.kuluna.eventgridview
 
 import android.content.Context
-import androidx.databinding.DataBindingUtil
 import android.os.Handler
 import android.os.Message
 import android.util.AttributeSet
-import android.util.Log
 import android.view.DragEvent
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.widget.FrameLayout
 import android.widget.ScrollView
+import androidx.databinding.DataBindingUtil
 import jp.kuluna.eventgridview.databinding.ViewEventListBinding
 import java.util.*
 
@@ -62,7 +61,6 @@ class DraggableEventGridListView : FrameLayout {
                     handler.removeMessageAll()
                 } else if (it.action == MotionEvent.ACTION_MOVE) {
                     val frameY = touchingAbsoluteY
-                    Log.d("testtest", it.y.toString())
                     when {
                         frameY < height * 0.1 -> handler.moveToTop()
                         frameY > height * 0.9 -> handler.moveToBottom()
