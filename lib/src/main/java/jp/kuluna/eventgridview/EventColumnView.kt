@@ -77,82 +77,6 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
             // イベントの左右に1dpのマージンを開ける
             setMargins(density.toInt(), 0, density.toInt(), 0)
         }
-
-        // 自身がドロップを受け入れられるようにする
-        setOnDragListener { _, dragEvent ->
-            onEventDragListener?.let { it(dragEvent) }
-            return@setOnDragListener when (dragEvent.action) {
-                DragEvent.ACTION_DROP -> {
-                    val intent = dragEvent.clipData.getItemAt(0).intent
-                    val position = intent.getIntExtra("itemPosition", -1)
-                    val event = Event.from(intent.getBundleExtra("event"))
-                    val eventBinding = DataBindingUtil.bind<ViewEventBinding>(dragEvent.localState as View)!!
-
-                    oldEvent = event
-                    var dropStartY = dragEvent.y - adjustStartTapY
-                    // EventGridView上部のマージン分下にずれるので補正
-                    dropStartY -= aScale / 2 / density
-                    // 開始地点がマイナスになった時は0時0分開始にする
-                    if (dropStartY < 0) {
-                        dropStartY = 0f
-                    } else if (dropStartY >= maxEventTop) {
-                        dropStartY = maxEventTop
-                    }
-
-
-                    // ドロップ位置のマージンで再設定
-                    val newStart = TimeParams.from(dropStartY - aScale / density, density)
-
-                    val startCal = Calendar.getInstance().apply { time = event.start }
-                    startCal.set(Calendar.HOUR_OF_DAY, newStart.hour)
-                    startCal.set(Calendar.MINUTE, newStart.min)
-
-                    val distance = startCal.time.time - event.start.time
-
-                    // 開始時刻を再設定
-                    event.start = startCal.time
-                    // 終了時刻を再設定
-                    val endCal = Calendar.getInstance().apply { time = event.end }
-                    endCal.add(Calendar.MILLISECOND, distance.toInt())
-                    event.end = endCal.time
-
-                    if (position != -1 && events.size > position) {
-                        events[position] = event
-                    } else {
-                        throw ArrayIndexOutOfBoundsException("position: $position events: $events")
-                    }
-
-                    // 変更を通知
-                    onEventChangedListener?.invoke(Event.from(intent.getBundleExtra("event")), event, true)
-
-                    // マージン指定
-                    eventBinding.root.layoutParams = (eventBinding.root.layoutParams as FrameLayout.LayoutParams).apply {
-                        val newMargin = (newStart.fromY * density).toInt()
-                        topMargin = newMargin + aScale / 2
-                    }
-
-                    // 編集表示用のEventを書き換えます
-                    eventBinding.root.setOnClickListener {
-                        onEventClickListener?.invoke(event)
-                    }
-
-                    // Eventの長さを調節するボタンを表示する
-                    eventBinding.topAdjust.visibility = View.VISIBLE
-                    eventBinding.bottomAdjust.visibility = View.VISIBLE
-
-                    true
-                }
-                DragEvent.ACTION_DRAG_STARTED -> {
-                    onDragStartListener?.invoke(dragEvent)
-                    true
-                }
-                DragEvent.ACTION_DRAG_ENDED -> {
-                    onDragEndListener?.invoke(dragEvent)
-                    true
-                }
-                else -> true
-            }
-        }
     }
 
     /**
@@ -168,6 +92,9 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
 
         val inflater = LayoutInflater.from(context)
         events.forEachIndexed { index, event ->
+            // 自身がドロップを受け入れられるようにする
+            setOnDragListener(createOnDragListener(event))
+
             val binding = DataBindingUtil.inflate<ViewEventBinding>(inflater, R.layout.view_event, null, false)
             binding.event = event
 
@@ -347,6 +274,82 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
         // 10: 最小のドラッグ単位を10dpにする
         val unit = (density * 10).toInt()
         return (px / unit).roundToInt() * unit
+    }
+
+    /** 各イベントに対応したDragListenerを生成します */
+    private fun createOnDragListener(event: Event): ((View, DragEvent) -> Boolean) {
+        return { _, dragEvent ->
+            onEventDragListener?.let { it(dragEvent) }
+            when (dragEvent.action) {
+                DragEvent.ACTION_DROP -> {
+                    val intent = dragEvent.clipData.getItemAt(0).intent
+                    val position = intent.getIntExtra("itemPosition", -1)
+                    val eventBinding = DataBindingUtil.bind<ViewEventBinding>(dragEvent.localState as View)!!
+
+                    oldEvent = event
+                    var dropStartY = dragEvent.y - adjustStartTapY
+                    // EventGridView上部のマージン分下にずれるので補正
+                    dropStartY -= aScale / 2 / density
+                    // 開始地点がマイナスになった時は0時0分開始にする
+                    if (dropStartY < 0) {
+                        dropStartY = 0f
+                    } else if (dropStartY >= maxEventTop) {
+                        dropStartY = maxEventTop
+                    }
+
+                    // ドロップ位置のマージンで再設定
+                    val newStart = TimeParams.from(dropStartY - aScale / density, density)
+
+                    val startCal = Calendar.getInstance().apply { time = event.start }
+                    startCal.set(Calendar.HOUR_OF_DAY, newStart.hour)
+                    startCal.set(Calendar.MINUTE, newStart.min)
+
+                    val distance = startCal.time.time - event.start.time
+
+                    // 開始時刻を再設定
+                    event.start = startCal.time
+                    // 終了時刻を再設定
+                    val endCal = Calendar.getInstance().apply { time = event.end }
+                    endCal.add(Calendar.MILLISECOND, distance.toInt())
+                    event.end = endCal.time
+
+                    if (position != -1 && events.size > position) {
+                        this.events[position] = event
+                    } else {
+                        throw ArrayIndexOutOfBoundsException("position: $position events: $events")
+                    }
+
+                    // 変更を通知
+                    onEventChangedListener?.invoke(Event.from(intent.getBundleExtra("event")), event, true)
+
+                    // マージン指定
+                    eventBinding.root.layoutParams = (eventBinding.root.layoutParams as FrameLayout.LayoutParams).apply {
+                        val newMargin = (newStart.fromY * density).toInt()
+                        topMargin = newMargin + aScale / 2
+                    }
+
+                    // 編集表示用のEventを書き換えます
+                    eventBinding.root.setOnClickListener {
+                        onEventClickListener?.invoke(event)
+                    }
+
+                    // Eventの長さを調節するボタンを表示する
+                    eventBinding.topAdjust.visibility = View.VISIBLE
+                    eventBinding.bottomAdjust.visibility = View.VISIBLE
+
+                    true
+                }
+                DragEvent.ACTION_DRAG_STARTED -> {
+                    onDragStartListener?.invoke(dragEvent)
+                    true
+                }
+                DragEvent.ACTION_DRAG_ENDED -> {
+                    onDragEndListener?.invoke(dragEvent)
+                    true
+                }
+                else -> true
+            }
+        }
     }
 }
 
