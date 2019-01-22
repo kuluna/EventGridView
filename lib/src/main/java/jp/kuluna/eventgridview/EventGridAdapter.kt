@@ -108,9 +108,6 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
             if (hideAll) {
                 hideAllAdjustButton()
             }
-            val index = events.indexOfFirst { it.start == old.start && it.end == old.end && it.groupId == old.groupId }
-            events[index].start = new.start
-            events[index].end = new.end
             onEventChangedListener?.invoke(old, new)
         }
 
