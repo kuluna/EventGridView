@@ -120,7 +120,7 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
      * @param events イベントリスト
      */
     fun replace(events: List<Event>, day: Date) {
-        this.events = events.sortedBy { it.groupId }
+        this.events = events
         this.group = this.events.groupBy { it.groupId }.toList()
         this.day = day
 

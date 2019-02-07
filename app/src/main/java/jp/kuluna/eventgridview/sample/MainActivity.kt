@@ -102,7 +102,7 @@ class MainActivity : AppCompatActivity() {
                     random % 2 == 0)
         }
 
-        adapter.replace(events, Date())
+        adapter.replace(events.sortedBy { it.start }, Date())
 
         // Eventのカウンタを表示する
         val countStart = Calendar.getInstance().apply {
