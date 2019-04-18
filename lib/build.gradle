@@ -4,7 +4,7 @@ apply plugin: 'com.jfrog.bintray'
 apply plugin: 'com.github.dcendents.android-maven'
 
 group = 'jp.kuluna'
-version = '2.0.7'
+version = '2.0.8'
 
 android {
     compileSdkVersion 28
@@ -89,10 +89,6 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 artifacts {
     archives javadocJar
     archives sourcesJar
-}
-
-task findConventions << {
-    println project.getConvention()
 }
 
 tasks.withType(Javadoc).all {
