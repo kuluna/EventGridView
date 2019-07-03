@@ -187,6 +187,12 @@ class EventGridView : FrameLayout {
     fun setScale(from: Int? = scaleFrom, to: Int? = scaleTo) {
         scaleFrom = from
         scaleTo = to
+
+        // fromとtoが一緒ならtoを伸ばす
+        if (from == to) {
+            scaleTo = (scaleTo ?: 0) + 1
+        }
+
         val newScaleFrom = getScaleFrom()
         val newScaleTo = getScaleTo()
         scaleListAdapter.setItemsIn(newScaleFrom + 1, newScaleTo - 1)
@@ -233,21 +239,16 @@ class EventGridView : FrameLayout {
         fun setItemsIn(from: Int, to: Int) {
             val scaleOfMax = context.resources.getInteger(R.integer.scale_of_max)
             // 引数の値が不正な場合はエラー
-            if (from > to) {
-                throw IllegalArgumentException("The argument `from` must be smaller than the argument `to`.")
-            }
-            if (from > scaleOfMax) {
-                throw IllegalArgumentException("The argument `from` must be smaller than $scaleOfMax.")
-            }
-            if (to > scaleOfMax) {
-                throw IllegalArgumentException("The argument `to` must be smaller than $scaleOfMax.")
+            if (from > to || from > scaleOfMax || to > scaleOfMax) {
+                items = emptyList()
+            } else {
+                val newItems = mutableListOf<Int>()
+                for (i in from..to) {
+                    newItems.add(i)
+                }
+                items = newItems.toList()
             }
 
-            val newItems = mutableListOf<Int>()
-            for (i in from..to) {
-                newItems.add(i)
-            }
-            items = newItems.toList()
             notifyDataSetChanged()
         }
     }
