@@ -188,13 +188,14 @@ class EventGridView : FrameLayout {
         scaleFrom = from
         scaleTo = to
 
+        val newScaleFrom = getScaleFrom()
+        var newScaleTo = getScaleTo()
+
         // fromとtoが一緒ならtoを伸ばす
-        if (from == to) {
-            scaleTo = (scaleTo ?: 0) + 1
+        if (newScaleFrom == newScaleTo) {
+            newScaleTo += 1
         }
 
-        val newScaleFrom = getScaleFrom()
-        val newScaleTo = getScaleTo()
         scaleListAdapter.setItemsIn(newScaleFrom + 1, newScaleTo - 1)
         // 最大のデータに合わせて高さを指定する
         binding.gridViews.layoutParams.height = (context.resources.getDimension(R.dimen.a_scale) * (newScaleTo + 1)).toInt()
