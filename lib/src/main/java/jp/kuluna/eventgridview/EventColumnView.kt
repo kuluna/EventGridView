@@ -128,7 +128,7 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
                 Event.CrossOver.FromNextDay -> {
                     val startParams = getParams(event.start, 1)
                     val endParams = getParams(event.end, 1)
-                    startParams.fromY to endParams.fromY
+                    startParams.fromY to endParams.fromY - startParams.fromY
                 }
 
                 Event.CrossOver.FromPreviousDay -> {
