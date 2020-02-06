@@ -19,6 +19,14 @@ android {
         consumerProguardFiles 'proguard-rules.pro'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
+
+    kotlinOptions.jvmTarget = '1.8'
+
     dataBinding {
         enabled = true
     }
