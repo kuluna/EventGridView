@@ -198,8 +198,6 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
                                 cal.add(Calendar.HOUR_OF_DAY, -elapsedTime!!.hour)
                                 cal.add(Calendar.MINUTE, -elapsedTime!!.min)
                                 newEvent.start = cal.time
-                                // サーバのEventデータを書き換えます
-                                onEventChangedListener?.invoke(oldEvent!!, newEvent, false)
 
                                 // 編集表示用のEventを書き換えます
                                 binding.cardView.setOnClickListener(null)
@@ -208,6 +206,8 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
                                 }
 
                                 oldEvent = newEvent
+                                event.start = cal.time
+                                onEventChangedListener?.invoke(oldEvent!!, event, false)
                             }
                             true
                         }
@@ -242,8 +242,6 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
                                 cal.add(Calendar.HOUR_OF_DAY, elapsedTime!!.hour)
                                 cal.add(Calendar.MINUTE, elapsedTime!!.min)
                                 newEvent.end = cal.time
-                                // サーバのEventデータを書き換えます
-                                onEventChangedListener?.invoke(oldEvent!!, newEvent, false)
 
                                 // 編集表示用のEventを書き換えます
                                 binding.cardView.setOnClickListener(null)
@@ -252,6 +250,8 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
                                 }
 
                                 oldEvent = newEvent
+                                event.end = cal.time
+                                onEventChangedListener?.invoke(oldEvent!!, event, false)
                             }
                             true
                         }
@@ -292,7 +292,7 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
                         throw ArrayIndexOutOfBoundsException("position: $position events: $events")
                     }
 
-                    val event  = this.events[position]
+                    val event = this.events[position]
                     oldEvent = event
                     var dropStartY = dragEvent.y - adjustStartTapY
                     // EventGridView上部のマージン分下にずれるので補正
