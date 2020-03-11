@@ -91,9 +91,11 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
         this.events = events.toMutableList()
 
         val inflater = LayoutInflater.from(context)
+
+        // 自身がドロップを受け入れられるようにする
+        setOnDragListener(createOnDragListener())
+
         events.forEachIndexed { index, event ->
-            // 自身がドロップを受け入れられるようにする
-            setOnDragListener(createOnDragListener(event))
 
             val binding = DataBindingUtil.inflate<ViewEventBinding>(inflater, R.layout.view_event, null, false)
             binding.event = event
@@ -277,7 +279,7 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
     }
 
     /** 各イベントに対応したDragListenerを生成します */
-    private fun createOnDragListener(event: Event): ((View, DragEvent) -> Boolean) {
+    private fun createOnDragListener(): ((View, DragEvent) -> Boolean) {
         return { _, dragEvent ->
             onEventDragListener?.let { it(dragEvent) }
             when (dragEvent.action) {
@@ -286,6 +288,11 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
                     val position = intent.getIntExtra("itemPosition", -1)
                     val eventBinding = DataBindingUtil.bind<ViewEventBinding>(dragEvent.localState as View)!!
 
+                    if (position == -1 || events.size <= position) {
+                        throw ArrayIndexOutOfBoundsException("position: $position events: $events")
+                    }
+
+                    val event  = this.events[position]
                     oldEvent = event
                     var dropStartY = dragEvent.y - adjustStartTapY
                     // EventGridView上部のマージン分下にずれるので補正
@@ -312,12 +319,6 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
                     val endCal = Calendar.getInstance().apply { time = event.end }
                     endCal.add(Calendar.MILLISECOND, distance.toInt())
                     event.end = endCal.time
-
-                    if (position != -1 && events.size > position) {
-                        this.events[position] = event
-                    } else {
-                        throw ArrayIndexOutOfBoundsException("position: $position events: $events")
-                    }
 
                     // 変更を通知
                     onEventChangedListener?.invoke(Event.from(intent.getBundleExtra("event")), event, true)
