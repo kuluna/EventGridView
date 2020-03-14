@@ -1,7 +1,6 @@
 package jp.kuluna.eventgridview
 
 import android.content.Context
-import android.util.Log
 import android.view.DragEvent
 import android.view.MotionEvent
 import android.view.View
@@ -109,8 +108,6 @@ open class EventGridAdapter(private val context: Context, private val widthIsMat
             if (hideAll) {
                 hideAllAdjustButton()
             }
-            Log.i("test EventGridAdapter", "old : $old")
-            Log.i("test EventGridAdapter", "new : $new")
             onEventChangedListener?.invoke(old, new)
         }
 
