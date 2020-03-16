@@ -205,9 +205,9 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
                                     onEventClickListener?.invoke(newEvent)
                                 }
 
-                                oldEvent = newEvent
                                 event.start = cal.time
-                                onEventChangedListener?.invoke(oldEvent!!, event, false)
+                                onEventChangedListener?.invoke(oldEvent!!.copy(), newEvent, false)
+                                oldEvent = newEvent
                             }
                             true
                         }
@@ -249,9 +249,9 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
                                     onEventClickListener?.invoke(newEvent)
                                 }
 
-                                oldEvent = newEvent
                                 event.end = cal.time
-                                onEventChangedListener?.invoke(oldEvent!!, event, false)
+                                onEventChangedListener?.invoke(oldEvent!!.copy(), newEvent, false)
+                                oldEvent = newEvent
                             }
                             true
                         }
@@ -293,7 +293,6 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
                     }
 
                     val event = this.events[position]
-                    oldEvent = event
                     var dropStartY = dragEvent.y - adjustStartTapY
                     // EventGridView上部のマージン分下にずれるので補正
                     dropStartY -= aScale / 2 / density
@@ -320,6 +319,7 @@ open class EventColumnView(context: Context, widthIsMatchParent: Boolean) : Fram
                     endCal.add(Calendar.MILLISECOND, distance.toInt())
                     event.end = endCal.time
 
+                    oldEvent = event.copy()
                     // 変更を通知
                     onEventChangedListener?.invoke(Event.from(intent.getBundleExtra("event")), event, true)
 
